@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
+    "target": "es5",
     "module": "commonjs",
+    "strict": true,
     "esModuleInterop": true,
-    "target": "es6",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*"]
+  "include": ["src"]
 }

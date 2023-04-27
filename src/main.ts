@@ -1,18 +1,23 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
-const puppeteer = require('puppeteer-core')
-const path = require('path')
+import { app, BrowserWindow, ipcMain } from 'electron'
+import puppeteer from 'puppeteer-core'
+import path from 'path'
+
 const chromeLauncher = require('chrome-launcher')
 
+if (process.env.NODE_ENV === 'development') {
+  require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, '..', 'node_modules', '.bin', 'electron'),
+    awaitWriteFinish: true,
+  })
+}
 async function runMacro() {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const browser = await puppeteer.launch({
     headless: false,
-    defaultViewport: null, // 기본 뷰포트를 사용하지 않습니다.
+    defaultViewport: null,
     executablePath: chromePath,
-    args: [
-      '--start-maximized', // 크롬 창을 최대화하여 시작합니다.
-    ],
+    args: ['--start-maximized'],
   })
   const page = await browser.newPage()
 
