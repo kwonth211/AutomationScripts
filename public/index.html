@@ -2,8 +2,106 @@
 <html>
   <head>
     <script src="./../dist/renderer.js"></script>
+    <style>
+      .time-option {
+        display: inline-block;
+        margin: 5px;
+        font-size: 12px;
+      }
+      fieldset > div {
+        display: flex;
+        margin-left: 5px;
+      }
+      #startMacro {
+        margin-top: 15px;
+      }
+    </style>
   </head>
   <body>
+    <div>
+      <fieldset>
+        <legend>병원 시간 선택:</legend>
+
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오전 08:00" />
+          <label class="time-option" for="time1">오전 08:00</label>
+          <input type="checkbox" id="time1" name="time" value="오전 08:30" />
+          <label class="time-option" for="time1">오전 08:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오전 09:00" />
+          <label class="time-option" for="time1">오전 09:00</label>
+          <input type="checkbox" id="time1" name="time" value="오전 09:30" />
+          <label class="time-option" for="time1">오전 09:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오전 10:00" />
+          <label class="time-option" for="time1">오전 10:00 </label>
+          <input type="checkbox" id="time1" name="time" value="오전 10:30" />
+          <label class="time-option" for="time1">오전 10:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오전 11:00" />
+          <label class="time-option" for="time1">오전 11:00 </label>
+          <input type="checkbox" id="time1" name="time" value="오전 11:30" />
+          <label class="time-option" for="time1">오전 11:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 12:00" />
+          <label class="time-option" for="time1">오후 12:00</label>
+          <input
+            type="checkbox"
+            id="time1"
+            name="time"
+            value="오후 12:30"
+            disabled
+          />
+          <label class="time-option" for="time1">오후 12:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 02:00" />
+          <label class="time-option" for="time1">오후 02:00</label>
+          <input type="checkbox" id="time1" name="time" value="오후 02:30" />
+          <label class="time-option" for="time1">오후 02:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 03:00" />
+          <label class="time-option" for="time1">오후 03:00</label>
+          <input type="checkbox" id="time1" name="time" value="오후 03:30" />
+          <label class="time-option" for="time1">오후 03:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 04:00" />
+          <label class="time-option" for="time1">오후 04:00</label>
+          <input type="checkbox" id="time1" name="time" value="오후 04:30" />
+          <label class="time-option" for="time1">오후 04:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 05:00" />
+          <label class="time-option" for="time1">오후 05:00</label>
+          <input type="checkbox" id="time1" name="time" value="오후 05:30" />
+          <label class="time-option" for="time1">오후 05:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 06:00" />
+          <label class="time-option" for="time1">오후 06:00</label>
+          <input type="checkbox" id="time1" name="time" value="오후 06:30" />
+          <label class="time-option" for="time1">오후 06:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 07:00" />
+          <label class="time-option" for="time1">오후 07:00</label>
+          <input type="checkbox" id="time1" name="time" value="오후 07:30" />
+          <label class="time-option" for="time1">오후 07:30</label>
+        </div>
+        <div>
+          <input type="checkbox" id="time1" name="time" value="오후 08:00" />
+          <label class="time-option" for="time1">오후 08:00</label>
+          <input type="checkbox" id="time1" name="time" value="오후 08:30" />
+          <label class="time-option" for="time1">오후 08:30</label>
+        </div>
+      </fieldset>
+    </div>
     <button id="startMacro">매크로 시작</button>
   </body>
 </html>

@@ -3,11 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (startMacroButton) {
     startMacroButton.addEventListener('click', () => {
-      console.log('startMacroButton')
-      console.log('startMacroButton')
-      console.log('startMacroButton')
-      console.log('startMacroButton')
-      ;(window as any)?.electron.send('start-macro')
+      const checkboxes = document.querySelectorAll("input[type='checkbox']")
+
+      const selectedTimes: string[] = []
+      checkboxes.forEach((checkbox: any) => {
+        if (checkbox.checked) {
+          selectedTimes.push(checkbox.value)
+        }
+      })
+      ;(window as any)?.electron.send('start-macro', selectedTimes)
     })
   }
 
