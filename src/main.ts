@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
-import puppeteer from 'puppeteer-core'
+import puppeteer, { Browser, Page } from 'puppeteer-core'
 import path from 'path'
 import { login } from './login'
 import { detectDialog } from './utils'
@@ -24,6 +24,7 @@ const DOCTOR_ENUM = {
   이재성: 9,
   박정아: 10,
 }
+const CHILD_NAME = '김선율'
 async function runMacro(selectedTimes: string[]) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
@@ -40,56 +41,76 @@ async function runMacro(selectedTimes: string[]) {
 
   const intervalId = setInterval(async () => {
     try {
-      await page.goto('https://www.ifirstch.com/reservation.php?sh_type=7')
-      for (let i = 2; i <= 24; i++) {
-        const tdSelector = `table.ssTd100 > tbody > tr:nth-child(${i}) > td:nth-child(${DOCTOR_ENUM['김은성']})`
-        const tdElement = await page.$(tdSelector)
-
-        if (tdElement) {
-          const childElements = await tdElement.$$('div')
-
-          for (let j = 0; j < childElements.length; j++) {
-            const innerText = await childElements[j]?.evaluate(
-              (el) => el.innerText,
-            )
-            if (innerText.trim() === '예약가능') {
-              clearInterval(intervalId)
-
-              await childElements[j].click()
-
-              const newTarget = await browser.waitForTarget(
-                (target) => target.opener() === page.target(),
-              )
-              const modalPage = await newTarget.page()
-
-              if (!modalPage) {
-                console.error('modal 없음')
-                return
-              }
-
-              const $reservationButtonSelector =
-                '#divInfo > table:nth-child(2) > tbody > tr > td:nth-child(1) > table > tbody > tr > td:nth-child(2)'
-              await modalPage.waitForSelector($reservationButtonSelector)
-              await modalPage.click($reservationButtonSelector)
-
-              const $selectSelector = '#stChildSelect'
-
-              await modalPage.waitForSelector($selectSelector)
-              await modalPage.select($selectSelector, '김이서')
-
-              const $submitButtonSelector = `#divForm > form > table:nth-child(6) > tbody > tr > td:nth-child(1) > table > tbody > tr > td:nth-child(2) > font > b`
-
-              await modalPage.waitForSelector($submitButtonSelector)
-            }
-          }
+      await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6')
+      if (selectedTimes) {
+        selectedTimes.forEach(async (row) => {
+          await reserve({ page, browser, row: Number(row), intervalId })
+        })
+      } else {
+        for (let i = 2; i <= 25; i++) {
+          await reserve({ page, browser, row: i, intervalId })
         }
       }
     } catch (error) {
       console.error('An error occurred during the process:', error)
       clearInterval(intervalId)
-      await page.goto('https://www.ifirstch.com/reservation.php?sh_type=7')
+      await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6')
     }
   }, 300)
+}
+export const reserve = async ({
+  page,
+  browser,
+  intervalId,
+  row,
+}: {
+  page: Page
+  browser: Browser
+  intervalId: NodeJS.Timer
+  row: number
+}) => {
+  const tdSelector = `table.ssTd100 > tbody > tr:nth-child(${row}) > td:nth-child(${DOCTOR_ENUM['차인아']})`
+  const tdElement = await page.$(tdSelector)
+
+  if (!tdElement) {
+    return console.error('tdElement 없음')
+  }
+  const childElements = await tdElement.$$('div')
+
+  for (let j = 0; j < childElements.length; j++) {
+    const innerText = await childElements[j]?.evaluate((el) => el.innerText)
+    if (innerText.trim() === '예약가능') {
+      clearInterval(intervalId)
+
+      await childElements[j].click()
+
+      const newTarget = await browser.waitForTarget(
+        (target) => target.opener() === page.target(),
+      )
+      const modalPage = await newTarget.page()
+
+      if (!modalPage) {
+        console.error('modal 없음')
+        return
+      }
+
+      const $reservationButtonSelector =
+        '#divInfo > table:nth-child(2) > tbody > tr > td:nth-child(1) > table > tbody > tr > td:nth-child(2)'
+      await modalPage.waitForSelector($reservationButtonSelector)
+      await modalPage.click($reservationButtonSelector)
+
+      const $selectSelector = '#stChildSelect'
+
+      await modalPage.waitForSelector($selectSelector)
+      await modalPage.select($selectSelector, CHILD_NAME)
+
+      const $submitButtonSelector = `#divForm > form > table:nth-child(6) > tbody > tr > td:nth-child(1) > table > tbody > tr > td:nth-child(2) > font > b`
+
+      await modalPage.waitForSelector($submitButtonSelector)
+
+      modalPage.click($submitButtonSelector)
+    }
+  }
 }
 
 ipcMain.on('start-macro', (_, selectedTimes) => {

@@ -14,10 +14,10 @@ export const login = async ({ page }: { page: Page }) => {
   await page.waitForSelector($idSelector)
   await page.waitForSelector($passwordSelector)
 
-  await page.type($idSelector, 'damit')
-  await page.type($passwordSelector, 'shdrn2233!')
-  //   await page.type($idSelector, 'wlals8805')
-  //   await page.type($passwordSelector, 'rla9194!')
+  // await page.type($idSelector, 'damit')
+  // await page.type($passwordSelector, 'shdrn2233!')
+  await page.type($idSelector, 'wlals8805')
+  await page.type($passwordSelector, 'rla9194!')
 
   await Promise.all([
     page.click($loginButtonSelector),
