@@ -16,8 +16,12 @@ export const login = async ({ page }: { page: Page }) => {
 
   // await page.type($idSelector, 'damit')
   // await page.type($passwordSelector, 'shdrn2233!')
-  await page.type($idSelector, 'wlals8805')
-  await page.type($passwordSelector, 'rla9194!')
+  if (!process.env.USER_ID || !process.env.USER_PASSWORD) {
+    throw new Error('아이디와 비밀번호를 불러오지 못했습니다.')
+  }
+
+  await page.type($idSelector, process.env.USER_ID)
+  await page.type($passwordSelector, process.env.USER_PASSWORD)
 
   await Promise.all([
     page.click($loginButtonSelector),

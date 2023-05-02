@@ -3,8 +3,14 @@ import puppeteer, { Browser, Page } from 'puppeteer-core'
 import path from 'path'
 import { login } from './login'
 import { detectDialog } from './utils'
-
+import dotenv from 'dotenv'
 const chromeLauncher = require('chrome-launcher')
+
+const resourcesPath = app.isPackaged
+  ? path.join(process.resourcesPath, 'resources')
+  : '.'
+const envFilePath = path.join(resourcesPath, '.env')
+dotenv.config({ path: envFilePath })
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-reload')(__dirname, {
