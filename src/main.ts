@@ -33,7 +33,7 @@ const DOCTOR_ENUM = {
 const CHILD_NAME = '김선율'
 async function runMacro({
   selectedTimes,
-  selectedTeachers = ['2', '5'],
+  selectedTeachers,
 }: {
   selectedTimes: string[]
   selectedTeachers: string[]
@@ -51,9 +51,7 @@ async function runMacro({
   detectDialog({ page })
   await login({ page })
 
-  let execute = true
-
-  while (execute) {
+  while (true) {
     try {
       await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6', {
         waitUntil: 'networkidle0',
@@ -63,21 +61,23 @@ async function runMacro({
 
         if (selectedTimes?.length > 0) {
           for (let i = 0; i < selectedTimes.length; i++) {
-            execute = await reserve({
+            const reserved = await reserve({
               page,
               browser,
               row: Number(selectedTimes[i]),
               teacher,
             })
+            if (reserved) break
           }
         } else {
           for (let i = 2; i <= 25; i++) {
-            execute = await reserve({
+            const reserved = await reserve({
               page,
               browser,
               row: i,
               teacher,
             })
+            if (reserved) break
           }
         }
       }
@@ -108,13 +108,12 @@ export const reserve = async ({
 
   if (!tdElement) {
     console.error('tdElement 없음')
-    return true
+    return
   }
   const childElements = await tdElement.$$('div')
 
   for (let j = 0; j < childElements.length; j++) {
     const innerText = await childElements[j]?.evaluate((el) => el.innerText)
-    console.log(innerText)
     if (innerText.trim() === '예약가능') {
       await childElements[j].click()
 
@@ -125,7 +124,7 @@ export const reserve = async ({
 
       if (!modalPage) {
         console.error('modal 없음')
-        return true
+        return
       }
 
       const $reservationButtonSelector =
@@ -145,10 +144,9 @@ export const reserve = async ({
 
       modalPage.click($submitButtonSelector)
 
-      return false
+      return true
     }
   }
-  return true
 }
 
 ipcMain.on('start-macro', (_, { selectedTimes, selectedTeachers }) => {
