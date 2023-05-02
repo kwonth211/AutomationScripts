@@ -25,7 +25,13 @@ const DOCTOR_ENUM = {
   박정아: 10,
 }
 const CHILD_NAME = '김선율'
-async function runMacro(selectedTimes: string[]) {
+async function runMacro({
+  selectedTimes,
+  selectedTeachers = ['2', '5'],
+}: {
+  selectedTimes: string[]
+  selectedTeachers: string[]
+}) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const browser = await puppeteer.launch({
@@ -44,19 +50,27 @@ async function runMacro(selectedTimes: string[]) {
       await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6', {
         waitUntil: 'networkidle0',
       })
-
-      if (selectedTimes?.length > 0) {
-        for (let i = 0; i < selectedTimes.length; i++) {
-          await reserve({
-            page,
-            browser,
-            row: Number(selectedTimes[i]),
-            intervalId,
-          })
-        }
-      } else {
-        for (let i = 2; i <= 25; i++) {
-          await reserve({ page, browser, row: i, intervalId })
+      for (let i = 0; i < selectedTeachers.length; i++) {
+        if (selectedTimes?.length > 0) {
+          for (let i = 0; i < selectedTimes.length; i++) {
+            await reserve({
+              page,
+              browser,
+              row: Number(selectedTimes[i]),
+              teacher: Number(selectedTeachers[i]),
+              intervalId,
+            })
+          }
+        } else {
+          for (let i = 2; i <= 25; i++) {
+            await reserve({
+              page,
+              browser,
+              row: i,
+              intervalId,
+              teacher: Number(selectedTeachers[i]),
+            })
+          }
         }
       }
     } catch (error: any) {
@@ -75,13 +89,15 @@ export const reserve = async ({
   browser,
   intervalId,
   row,
+  teacher,
 }: {
   page: Page
   browser: Browser
   intervalId: NodeJS.Timer
   row: number
+  teacher: number
 }) => {
-  const tdSelector = `table.ssTd100 > tbody > tr:nth-child(${row}) > td:nth-child(${DOCTOR_ENUM['차인아']})`
+  const tdSelector = `table.ssTd100 > tbody > tr:nth-child(${row}) > td:nth-child(${teacher})`
   const tdElement = await page.$(tdSelector)
 
   if (!tdElement) {
@@ -125,8 +141,8 @@ export const reserve = async ({
   }
 }
 
-ipcMain.on('start-macro', (_, selectedTimes) => {
-  runMacro(selectedTimes)
+ipcMain.on('start-macro', (_, { selectedTimes, selectedTeachers }) => {
+  runMacro({ selectedTimes, selectedTeachers })
     .then(() => {
       // 매크로 작업이 완료되면 렌더러 프로세스에 알립니다.
       // win.webContents.send('macro-finished');

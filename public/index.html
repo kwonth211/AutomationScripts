@@ -15,10 +15,13 @@
       #startMacro {
         margin-top: 15px;
       }
+      .container {
+        display: flex;
+      }
     </style>
   </head>
   <body>
-    <div>
+    <div class="container">
       <fieldset>
         <legend>병원 시간 선택:</legend>
 
@@ -99,6 +102,18 @@
           <label class="time-option" for="time24">오후 08:00</label>
           <input type="checkbox" id="time25" name="time25" value="25" />
           <label class="time-option" for="time25">오후 08:30</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>원장님 선택:</legend>
+
+        <div>
+          <input type="checkbox" id="doctor1" name="doctor1" value="2" />
+          <label class="time-option" for="doctor1">차인아</label>
+        </div>
+        <div>
+          <input type="checkbox" id="doctor2" name="doctor2" value="5" />
+          <label class="time-option" for="doctor2">정권</label>
         </div>
       </fieldset>
     </div>

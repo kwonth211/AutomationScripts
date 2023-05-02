@@ -3,15 +3,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (startMacroButton) {
     startMacroButton.addEventListener('click', () => {
-      const checkboxes = document.querySelectorAll("input[type='checkbox']")
+      const timeCheckboxes = document.querySelectorAll(
+        "input[type='checkbox']:not([name^='doctor'])",
+      )
+      const doctorCheckboxes = document.querySelectorAll(
+        "input[type='checkbox'][name^='doctor']",
+      )
 
       const selectedTimes: string[] = []
-      checkboxes.forEach((checkbox: any) => {
+      const selectedTeachers: string[] = []
+
+      timeCheckboxes.forEach((checkbox: any) => {
         if (checkbox.checked) {
           selectedTimes.push(checkbox.value)
         }
       })
-      ;(window as any)?.electron.send('start-macro', selectedTimes)
+      doctorCheckboxes.forEach((checkbox: any) => {
+        if (checkbox.checked) {
+          selectedTeachers.push(checkbox.value)
+        }
+      })
+      ;(window as any)?.electron.send('start-macro', {
+        selectedTimes,
+        selectedTeachers,
+      })
     })
   }
 
