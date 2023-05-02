@@ -41,7 +41,10 @@ async function runMacro(selectedTimes: string[]) {
 
   const intervalId = setInterval(async () => {
     try {
-      await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6')
+      await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6', {
+        waitUntil: 'networkidle0',
+      })
+
       if (selectedTimes?.length > 0) {
         for (let i = 0; i < selectedTimes.length; i++) {
           await reserve({
@@ -56,10 +59,14 @@ async function runMacro(selectedTimes: string[]) {
           await reserve({ page, browser, row: i, intervalId })
         }
       }
-    } catch (error) {
-      console.error('An error occurred during the process:', error)
-      clearInterval(intervalId)
-      await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6')
+    } catch (error: any) {
+      if (error.message.includes('Execution context was destroyed')) {
+        console.error('Navigation occurred, retrying...')
+      } else {
+        console.error('An error occurred during the process:', error)
+        clearInterval(intervalId)
+        await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6')
+      }
     }
   }, 300)
 }
