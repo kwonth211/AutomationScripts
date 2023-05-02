@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
           selectedTeachers.push(checkbox.value)
         }
       })
+
+      if (selectedTeachers.length === 0) {
+        selectedTeachers.push('2')
+        selectedTeachers.push('5')
+      }
+
       ;(window as any)?.electron.send('start-macro', {
         selectedTimes,
         selectedTeachers,

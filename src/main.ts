@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import puppeteer, { Browser, Page } from 'puppeteer-core'
 import path from 'path'
 import { login } from './login'
-import { detectDialog } from './utils'
+import { detectDialog, sleep } from './utils'
 import dotenv from 'dotenv'
 const chromeLauncher = require('chrome-launcher')
 
@@ -51,30 +51,32 @@ async function runMacro({
   detectDialog({ page })
   await login({ page })
 
-  const intervalId = setInterval(async () => {
+  let execute = true
+
+  while (execute) {
     try {
       await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6', {
         waitUntil: 'networkidle0',
       })
       for (let i = 0; i < selectedTeachers.length; i++) {
+        const teacher = Number(selectedTeachers[i])
+
         if (selectedTimes?.length > 0) {
           for (let i = 0; i < selectedTimes.length; i++) {
-            await reserve({
+            execute = await reserve({
               page,
               browser,
               row: Number(selectedTimes[i]),
-              teacher: Number(selectedTeachers[i]),
-              intervalId,
+              teacher,
             })
           }
         } else {
           for (let i = 2; i <= 25; i++) {
-            await reserve({
+            execute = await reserve({
               page,
               browser,
               row: i,
-              intervalId,
-              teacher: Number(selectedTeachers[i]),
+              teacher,
             })
           }
         }
@@ -84,22 +86,20 @@ async function runMacro({
         console.error('Navigation occurred, retrying...')
       } else {
         console.error('An error occurred during the process:', error)
-        clearInterval(intervalId)
         await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6')
       }
     }
-  }, 300)
+    // await sleep(300)
+  }
 }
 export const reserve = async ({
   page,
   browser,
-  intervalId,
   row,
   teacher,
 }: {
   page: Page
   browser: Browser
-  intervalId: NodeJS.Timer
   row: number
   teacher: number
 }) => {
@@ -107,15 +107,15 @@ export const reserve = async ({
   const tdElement = await page.$(tdSelector)
 
   if (!tdElement) {
-    return console.error('tdElement 없음')
+    console.error('tdElement 없음')
+    return true
   }
   const childElements = await tdElement.$$('div')
 
   for (let j = 0; j < childElements.length; j++) {
     const innerText = await childElements[j]?.evaluate((el) => el.innerText)
+    console.log(innerText)
     if (innerText.trim() === '예약가능') {
-      clearInterval(intervalId)
-
       await childElements[j].click()
 
       const newTarget = await browser.waitForTarget(
@@ -125,12 +125,13 @@ export const reserve = async ({
 
       if (!modalPage) {
         console.error('modal 없음')
-        return
+        return true
       }
 
       const $reservationButtonSelector =
         '#divInfo > table:nth-child(2) > tbody > tr > td:nth-child(1) > table > tbody > tr > td:nth-child(2)'
       await modalPage.waitForSelector($reservationButtonSelector)
+
       await modalPage.click($reservationButtonSelector)
 
       const $selectSelector = '#stChildSelect'
@@ -143,8 +144,11 @@ export const reserve = async ({
       await modalPage.waitForSelector($submitButtonSelector)
 
       modalPage.click($submitButtonSelector)
+
+      return false
     }
   }
+  return true
 }
 
 ipcMain.on('start-macro', (_, { selectedTimes, selectedTeachers }) => {
