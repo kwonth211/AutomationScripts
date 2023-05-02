@@ -42,10 +42,15 @@ async function runMacro(selectedTimes: string[]) {
   const intervalId = setInterval(async () => {
     try {
       await page.goto('https://www.ifirstch.com/reservation.php?sh_type=6')
-      if (selectedTimes) {
-        selectedTimes.forEach(async (row) => {
-          await reserve({ page, browser, row: Number(row), intervalId })
-        })
+      if (selectedTimes?.length > 0) {
+        for (let i = 0; i < selectedTimes.length; i++) {
+          await reserve({
+            page,
+            browser,
+            row: Number(selectedTimes[i]),
+            intervalId,
+          })
+        }
       } else {
         for (let i = 2; i <= 25; i++) {
           await reserve({ page, browser, row: i, intervalId })
