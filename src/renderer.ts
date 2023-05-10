@@ -1,37 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const startMacroButton = document.getElementById('startMacro')
+  const rangeForm = document.getElementById('rangeForm')
 
-  if (startMacroButton) {
-    startMacroButton.addEventListener('click', () => {
-      const timeCheckboxes = document.querySelectorAll(
-        "input[type='checkbox']:not([name^='doctor'])",
-      )
-      const doctorCheckboxes = document.querySelectorAll(
-        "input[type='checkbox'][name^='doctor']",
-      )
+  if (rangeForm) {
+    rangeForm.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const minRange = (document.getElementById('minRange') as HTMLInputElement)
+        .value
+      const maxRange = (document.getElementById('maxRange') as HTMLInputElement)
+        .value
 
-      const selectedTimes: string[] = []
-      const selectedTeachers: string[] = []
+      const isBackground = (
+        document.getElementById('background') as HTMLInputElement
+      ).checked
 
-      timeCheckboxes.forEach((checkbox: any) => {
-        if (checkbox.checked) {
-          selectedTimes.push(checkbox.value)
-        }
-      })
-      doctorCheckboxes.forEach((checkbox: any) => {
-        if (checkbox.checked) {
-          selectedTeachers.push(checkbox.value)
-        }
-      })
-
-      if (selectedTeachers.length === 0) {
-        selectedTeachers.push('2')
-        selectedTeachers.push('5')
+      if (parseInt(minRange) > parseInt(maxRange)) {
+        alert('최소 조회수는 최대 조회수보다 작아야 합니다.')
+        return
       }
-
       ;(window as any)?.electron.send('start-macro', {
-        selectedTimes,
-        selectedTeachers,
+        minRange,
+        maxRange,
+        isBackground,
       })
     })
   }
