@@ -5,11 +5,10 @@ import { login } from './login'
 import { detectDialog, sleep } from './utils'
 import dotenv from 'dotenv'
 import { visit } from './domain/usedCafe'
+import { authenticateUser, reserve } from './domain/buk-gu-football'
 const chromeLauncher = require('chrome-launcher')
 
-const resourcesPath = app.isPackaged
-  ? path.join(process.resourcesPath, 'resources')
-  : '.'
+const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'
 const envFilePath = path.join(resourcesPath, '.env')
 dotenv.config({ path: envFilePath })
 
@@ -20,46 +19,33 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-async function runMacro({
-  minRange,
-  maxRange,
-  isBackground,
-}: {
-  minRange: string
-  maxRange: string
-  isBackground: boolean
-}) {
-  const minRangeNumber = parseInt(minRange)
-  const maxRangeNumber = parseInt(maxRange)
+async function runMacro({ isBackground, formData }: { formData: any; isBackground: boolean }) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const browser = await puppeteer.launch({
-    headless: isBackground,
+    headless: false,
     defaultViewport: null,
     executablePath: chromePath,
     args: ['--start-maximized'],
   })
 
   const page = await browser.newPage()
-  detectDialog({ page })
-
-  const randomViewCount =
-    Math.floor(Math.random() * (maxRangeNumber - minRangeNumber + 1)) +
-    maxRangeNumber
+  detectDialog({ page, browser, formData })
 
   try {
-    await visit({
-      page,
-      browser,
-      randomViewCount,
-    })
+    await authenticateUser({ page })
+
+    // test용
+    // for (let court of formData.courts) {
+    //   await reserve({ page, browser, formData, court })
+    // }
   } catch (error) {
     console.error(error)
   }
 }
 
-ipcMain.on('start-macro', (_, { minRange, maxRange, isBackground }) => {
-  runMacro({ minRange, maxRange, isBackground })
+ipcMain.on('start-macro', (_, { isBackground, formData }) => {
+  runMacro({ isBackground, formData })
     .then(() => {
       // 매크로 작업이 완료되면 렌더러 프로세스에 알립니다.
       // win.webContents.send('macro-finished');
@@ -71,8 +57,8 @@ ipcMain.on('start-macro', (_, { minRange, maxRange, isBackground }) => {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 600,
-    height: 450,
+    width: 800,
+    height: 700,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
