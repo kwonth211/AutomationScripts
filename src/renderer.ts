@@ -1,26 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const rangeForm = document.getElementById('rangeForm')
+  const macroForm = document.getElementById('macro-form')
+  console.log(macroForm)
 
-  if (rangeForm) {
-    rangeForm.addEventListener('submit', (e) => {
+  if (macroForm) {
+    macroForm.addEventListener('submit', (e) => {
       e.preventDefault()
-      const minRange = (document.getElementById('minRange') as HTMLInputElement)
-        .value
-      const maxRange = (document.getElementById('maxRange') as HTMLInputElement)
-        .value
+      let options = document.getElementsByName(
+        'options',
+      ) as NodeListOf<HTMLInputElement>
 
-      const isBackground = (
-        document.getElementById('background') as HTMLInputElement
-      ).checked
-
-      if (parseInt(minRange) > parseInt(maxRange)) {
-        alert('최소 조회수는 최대 조회수보다 작아야 합니다.')
-        return
+      let selectedOption
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].checked) {
+          selectedOption = options[i].value
+          break
+        }
       }
+
       ;(window as any)?.electron.send('start-macro', {
-        minRange,
-        maxRange,
-        isBackground,
+        selectedOption,
       })
     })
   }

@@ -2,44 +2,68 @@
 <html>
   <head>
     <script src="./../dist/renderer.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+
     <style>
       #startMacro {
         margin-top: 15px;
       }
       .container {
         display: flex;
+        flex-direction: column;
       }
     </style>
   </head>
   <body>
-    <form id="rangeForm">
-      <label for="minRange">최소 조회수:</label>
-      <input
-        type="number"
-        id="minRange"
-        name="minRange"
-        min="0"
-        step="1"
-        required
-      />
-      <br /><br />
-      <label for="maxRange">최대 조회수:</label>
-      <input
-        type="number"
-        id="maxRange"
-        name="maxRange"
-        min="0"
-        step="1"
-        required
-      />
+    <div class="container mt-5">
+      <h3 class="mb-4">컬쳐랜드 쿠폰구매</h3>
+      <form id="macro-form">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="options"
+            id="option1"
+            value="option1"
+            checked
+          />
+          <label class="form-check-label" for="option1"
+            >옵션1 : A회사 50만원 * 20개
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="options"
+            id="option2"
+            value="option2"
+          />
+          <label class="form-check-label" for="option2"
+            >옵션2 : A회사 30만원 * 33개</label
+          >
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="options"
+            id="option3"
+            value="option3"
+          />
+          <label class="form-check-label" for="option3"
+            >옵션3 : A회사 50만원 * 20개 + B회사 50만원 * 20개</label
+          >
+        </div>
 
-      <br /><br />
-      <div>
-        <input type="checkbox" id="background" name="background" checked />
-        <label for="background">백그라운드 실행 여부:</label>
-      </div>
-      <br /><br />
-      <button id="startMacro" type="submit">매크로 시작</button>
-    </form>
+        <button type="submit" class="btn btn-primary mt-4" id="start-macro">
+          매크로 시작
+        </button>
+      </form>
+    </div>
   </body>
 </html>
