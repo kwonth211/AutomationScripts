@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const macroForm = document.getElementById('macro-form')
-  console.log(macroForm)
 
   if (macroForm) {
     macroForm.addEventListener('submit', (e) => {
@@ -15,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      ;(window as any)?.electron.send('start-macro', {
+      window?.electron.send('start-macro', {
         selectedOption,
       })
     })
@@ -24,4 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // window.electron.on('macro-finished', () => {
   //   console.log('매크로 작업 완료');
   // });
+})
+
+window.electron.on('log-message', (logMessage: any) => {
+  const logElement = document.querySelector('#log') as HTMLDivElement
+  const messageElement = document.createElement('div')
+  messageElement.textContent = logMessage
+  logElement.appendChild(messageElement)
 })

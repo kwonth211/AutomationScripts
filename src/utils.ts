@@ -1,5 +1,6 @@
 import { Browser, Page } from 'puppeteer-core'
-import { ReserveFormData, reserve } from './domain/buk-gu-football'
+import { BrowserWindow, powerSaveBlocker } from 'electron'
+import path from 'path'
 
 export const detectDialog = ({ page }: { page: Page }) => {
   page.on('dialog', async (dialog) => {
@@ -22,4 +23,19 @@ export const closePopups = ({ page }: { page: Page }) => {
 
 export const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+export const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 700,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, './preload.js'),
+    },
+  })
+
+  powerSaveBlocker.start('prevent-display-sleep')
+
+  win.loadFile('./public/index.html')
 }

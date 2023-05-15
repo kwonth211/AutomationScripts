@@ -1,21 +1,13 @@
 import { Page } from 'puppeteer-core'
 import { sleep } from '../utils'
+import { log } from '../logger'
 
 export type SelectedOption = 'option1' | 'option2' | 'option3'
 
-export const login = async ({
-  page,
-  selectedOption,
-}: {
-  page: Page
-  selectedOption: SelectedOption
-}) => {
-  await page.goto(
-    'https://m.cultureland.co.kr/mmb/loginMain.do?agent_url=%2Fcpn%2FcpnApp.do%3Fcpgm%3Dsgckiosk',
-  )
-
+export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
+  await page.goto('https://m.cultureland.co.kr/mmb/loginMain.do?agent_url=%2Fcpn%2FcpnApp.do%3Fcpgm%3Dsgckiosk')
   const loginButtonSelector = '#btnLogin'
-
+  log('로그인 시작')
   await page.waitForFunction(
     (selector) => document.querySelector(selector) === null,
     {
@@ -65,9 +57,7 @@ export const buyGiftCard = async ({
     return
   }
 
-  await page.goto(
-    `https://m.cultureland.co.kr/cpn/cpnApp.do?cpgm=${COMPANY_ID[company]}`,
-  )
+  await page.goto(`https://m.cultureland.co.kr/cpn/cpnApp.do?cpgm=${COMPANY_ID[company]}`)
 
   await sleep(1000)
 
@@ -77,7 +67,7 @@ export const buyGiftCard = async ({
   const isNotBuyTime = notBuyTimeElement !== null
 
   if (isNotBuyTime) {
-    console.log('아직 구매할 수 없는 시간입니다.')
+    log('아직 구매할 수 없는 시간입니다.')
     await sleep(1000)
     await buyGiftCard({ page, company, price, count })
     return
@@ -101,24 +91,18 @@ export const buyGiftCard = async ({
 
   await page.waitForSelector(inputSelector)
 
-  const isSoldOut = await page.$eval(
-    inputSelector,
-    (input) => (input as HTMLInputElement).disabled,
-  )
+  const isSoldOut = await page.$eval(inputSelector, (input) => (input as HTMLInputElement).disabled)
 
-  const inputPrice = await page.$eval(
-    inputSelector,
-    (input) => (input as HTMLInputElement).value,
-  )
+  const inputPrice = await page.$eval(inputSelector, (input) => (input as HTMLInputElement).value)
 
   // Sold Out이면 다음 항목으로 넘어감
   if (isSoldOut) {
-    console.log('This item is sold out')
+    log('This item is sold out')
     return
   }
 
   if (Number(inputPrice) !== price) {
-    console.log('가격이 다름')
+    log('가격이 다름')
     return
   }
   await page.click(aSelector)
@@ -148,6 +132,6 @@ export const buyGiftCard = async ({
   await page.waitForSelector(confirmButtonSelector)
   await page.click(confirmButtonSelector)
 
-  console.log('구매 완료!!')
+  log('구매 완료!!')
   await buyGiftCard({ page, company, price, count: count - 1 })
 }
