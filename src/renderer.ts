@@ -1,29 +1,38 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const rangeForm = document.getElementById('rangeForm')
+  const form = document.getElementById('footballForm') as HTMLFormElement
 
-  if (rangeForm) {
-    rangeForm.addEventListener('submit', (e) => {
-      e.preventDefault()
-      const minRange = (document.getElementById('minRange') as HTMLInputElement)
-        .value
-      const maxRange = (document.getElementById('maxRange') as HTMLInputElement)
-        .value
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
 
-      const isBackground = (
-        document.getElementById('background') as HTMLInputElement
-      ).checked
+    const formData: Record<string, any> = {}
+    for (let i = 0; i < form.elements.length; i++) {
+      let element = form.elements[i] as HTMLInputElement
 
-      if (parseInt(minRange) > parseInt(maxRange)) {
-        alert('최소 조회수는 최대 조회수보다 작아야 합니다.')
-        return
+      if (element.type === 'submit') {
+        continue
       }
-      ;(window as any)?.electron.send('start-macro', {
-        minRange,
-        maxRange,
-        isBackground,
-      })
+
+      if (element.name.includes('time')) {
+        if (element.checked) {
+          formData.times = [...(formData.times ?? []), element.name.replace('time', '')]
+        }
+      } else if (element.type === 'radio') {
+        if (element.checked) {
+          formData[element.name] = element.value
+        }
+      } else if (element.name.includes('court')) {
+        if (element.checked) {
+          formData.courts = [...(formData.courts ?? []), element.value]
+        }
+      } else {
+        formData[element.name] = element.value
+      }
+    }
+
+    ;(window as any)?.electron.send('start-macro', {
+      formData,
     })
-  }
+  })
 
   // 메인 프로세스에서 전달된 메시지 처리 (옵션)
   // window.electron.on('macro-finished', () => {
