@@ -1,6 +1,6 @@
 import { Browser, Page } from 'puppeteer-core'
 import { sleep } from '../utils'
-const countInterval = 5 * 60 * 1000
+const countInterval = 2 * 60 * 1000
 
 export const visit = async ({
   page,
