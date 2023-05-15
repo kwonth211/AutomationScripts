@@ -1,34 +1,22 @@
 import { Browser, Page } from 'puppeteer-core'
 import { ReserveFormData, reserve } from './domain/buk-gu-football'
 
-export const detectDialog = ({
-  page,
-  browser,
-  formData,
-}: {
-  page: Page
-  browser: Browser
-  formData: ReserveFormData
-}) => {
+export const detectDialog = ({ page }: { page: Page }) => {
   page.on('dialog', async (dialog) => {
     console.log(`Dialog message: ${dialog.message()}`)
     await dialog.accept() // 확인 버튼을 누릅니다.
 
     if (dialog.message() === '본인인증에 성공하였습니다.') {
-      try {
-        for (let court of formData.courts) {
-          await reserve({ page, browser, formData, court })
-        }
-      } catch (error) {
-        console.error(error)
-      }
     }
 
     if (dialog.message() === '잘못된 경로로 접근하였습니다.') {
-      for (let court of formData.courts) {
-        await reserve({ page, browser, formData, court })
-      }
     }
+  })
+}
+export const closePopups = ({ page }: { page: Page }) => {
+  page.on('popup', async (popupPage: Page) => {
+    // 새로운 팝업 창이 생성되면 바로 닫음
+    await popupPage.close()
   })
 }
 

@@ -4,6 +4,9 @@
     <title>웃골 풋살장 예약시스템</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <script src="./../dist/renderer.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
     <style>
       #startMacro {
         margin-top: 15px;
@@ -31,189 +34,28 @@
       }
       .phoneWrapper {
         display: flex;
+        flex-direction: column;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <form id="footballForm">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>구장 선택</label><br />
-              <input type="checkbox" id="courtA" name="courtA" value="A" />
-              <label for="courtA"> A 구장</label><br />
-              <input type="checkbox" id="courtB" name="courtB" value="B" />
-              <label for="courtB"> B 구장</label><br />
-              <input type="checkbox" id="courtC" name="courtC" value="C" />
-              <label for="courtC"> C 구장</label><br />
-              <input type="checkbox" id="courtD" name="courtD" value="D" />
-              <label for="courtD"> D 구장</label><br />
-            </div>
-
-            <div class="form-group">
-              <label>날짜 선택</label>
-              <input type="date" required class="form-control form-control-sm" id="date" name="date" />
-            </div>
-
-            <div class="form-group">
-              <label>시간 선택</label><br />
-              <input type="checkbox" name="time1" id="time1" value="6:00 ~ 7:00" /><label for="time1">
-                6:00 ~ 7:00</label
-              ><br />
-              <input type="checkbox" name="time2" id="time2" value="7:00 ~ 8:00" /><label for="time2">
-                7:00 ~ 8:00</label
-              ><br />
-              <input type="checkbox" name="time3" id="time3" value="8:00 ~ 9:00" /><label for="time3">
-                8:00 ~ 9:00</label
-              ><br />
-              <input type="checkbox" name="time4" id="time4" value="9:00 ~ 10:00" /><label for="time4">
-                9:00 ~ 10:00</label
-              ><br />
-              <input type="checkbox" name="time5" id="time5" value="10:00 ~ 11:00" /><label for="time5">
-                10:00 ~ 11:00</label
-              ><br />
-              <input type="checkbox" name="time6" id="time6" value="11:00 ~ 12:00" /><label for="time6">
-                11:00 ~ 12:00</label
-              ><br />
-              <input type="checkbox" name="time7" id="time7" value="12:00 ~ 13:00" /><label for="time7">
-                12:00 ~ 13:00</label
-              ><br />
-              <input type="checkbox" name="time8" id="time8" value="13:00 ~ 14:00" /><label for="time8">
-                13:00 ~ 14:00</label
-              ><br />
-              <input type="checkbox" name="time9" id="time9" value="14:00 ~ 15:00" /><label for="time9">
-                14:00 ~ 15:00</label
-              ><br />
-              <input type="checkbox" name="time10" id="time10" value="15:00 ~ 16:00" /><label for="time10">
-                15:00 ~ 16:00</label
-              ><br />
-              <input type="checkbox" name="time11" id="time11" value="16:00 ~ 17:00" /><label for="time11">
-                16:00 ~ 17:00</label
-              ><br />
-              <input type="checkbox" name="time12" id="time12" value="17:00 ~ 18:00" /><label for="time12">
-                17:00 ~ 18:00</label
-              ><br />
-              <input type="checkbox" name="time13" id="time13" value="18:00 ~ 19:00" /><label for="time13">
-                18:00 ~ 19:00</label
-              ><br />
-              <input type="checkbox" name="time14" id="time14" value="19:00 ~ 20:00" /><label for="time14">
-                19:00 ~ 20:00</label
-              ><br />
-              <input type="checkbox" name="time15" id="time15" value="20:00 ~ 21:00" /><label for="time15">
-                20:00 ~ 21:00</label
-              ><br />
-              <input type="checkbox" name="time16" id="time16" value="21:00 ~ 22:00" /><label for="time16">
-                21:00 ~ 22:00</label
-              ><br />
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>휴대폰 번호</label>
-
-              <div class="phoneWrapper">
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="area-code"
-                  maxlength="3"
-                  size="3"
-                  disabled
-                  value="010"
-                />
-                <span>-</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="middle-number"
-                  maxlength="4"
-                  size="4"
-                  required
-                />
-                <span>-</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="last-number"
-                  maxlength="4"
-                  size="4"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Email</label>
-              <input
-                required
-                type="email"
-                class="form-control form-control-sm"
-                id="email"
-                name="email"
-                placeholder="Email"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>구분</label>
-              <input type="radio" id="individual" name="division" value="individual" />
-              <label for="individual">개인</label>
-              <input type="radio" id="group" name="division" checked value="group" />
-              <label for="group">단체</label>
-            </div>
-
-            <div class="form-group">
-              <label>행사명</label>
-              <input
-                required
-                type="text"
-                class="form-control form-control-sm"
-                id="event"
-                name="event"
-                placeholder="행사명"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>참여단체</label>
-              <input
-                required
-                type="text"
-                class="form-control form-control-sm"
-                id="participatingOrganization"
-                name="participatingOrganization"
-                placeholder="참여단체"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>참여인원</label>
-              <input
-                required
-                type="number"
-                class="form-control form-control-sm"
-                id="participants"
-                name="participants"
-                placeholder="참여인원"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>행사내용</label>
-              <textarea
-                required
-                class="form-control form-control-sm"
-                id="eventDetails"
-                name="eventDetails"
-                rows="3"
-              ></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">예약하기</button>
-          </div>
+    <div class="container mt-5">
+      <h3 class="mb-4">컬쳐랜드 쿠폰구매</h3>
+      <form id="macro-form">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option1" value="option1" checked />
+          <label class="form-check-label" for="option1">옵션1 : A회사 50만원 * 20개 </label>
         </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option2" value="option2" />
+          <label class="form-check-label" for="option2">옵션2 : A회사 30만원 * 33개</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option3" value="option3" />
+          <label class="form-check-label" for="option3">옵션3 : A회사 50만원 * 20개 + B회사 50만원 * 20개</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4" id="start-macro">매크로 시작</button>
       </form>
     </div>
   </body>

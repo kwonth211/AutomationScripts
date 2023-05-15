@@ -1,11 +1,9 @@
 import { app, BrowserWindow, ipcMain, powerSaveBlocker } from 'electron'
 import puppeteer from 'puppeteer-core'
 import path from 'path'
-import { login } from './login'
-import { detectDialog, sleep } from './utils'
+import { closePopups, detectDialog } from './utils'
 import dotenv from 'dotenv'
-import { visit } from './domain/usedCafe'
-import { authenticateUser, reserve } from './domain/buk-gu-football'
+import { login } from './domain/cultureLand'
 const chromeLauncher = require('chrome-launcher')
 
 const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'
@@ -19,33 +17,41 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-async function runMacro({ isBackground, formData }: { formData: any; isBackground: boolean }) {
+async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'option2' | 'option3' }) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const browser = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
     executablePath: chromePath,
-    args: ['--start-maximized'],
+    args: [
+      '--start-maximized',
+      // `--disable-extensions-except=${extensionPath}`,
+      // `--load-extension=${extensionPath}`,
+    ],
   })
 
   const page = await browser.newPage()
-  detectDialog({ page, browser, formData })
+
+  await page.setViewport({ width: 375, height: 812 })
+  await page.setUserAgent(
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+  )
+
+  await page.setDefaultTimeout(10000)
+
+  detectDialog({ page })
+  closePopups({ page })
 
   try {
-    await authenticateUser({ page })
-
-    // test용
-    // for (let court of formData.courts) {
-    //   await reserve({ page, browser, formData, court })
-    // }
+    await login({ page, selectedOption })
   } catch (error) {
     console.error(error)
   }
 }
 
-ipcMain.on('start-macro', (_, { isBackground, formData }) => {
-  runMacro({ isBackground, formData })
+ipcMain.on('start-macro', (_, { selectedOption }) => {
+  runMacro({ selectedOption })
     .then(() => {
       // 매크로 작업이 완료되면 렌더러 프로세스에 알립니다.
       // win.webContents.send('macro-finished');
@@ -65,6 +71,9 @@ function createWindow() {
       preload: path.join(__dirname, './preload.js'),
     },
   })
+  win.webContents.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537',
+  )
 
   powerSaveBlocker.start('prevent-display-sleep')
 
