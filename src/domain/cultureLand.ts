@@ -78,6 +78,7 @@ export const buyGiftCard = async ({
 
   if (isNotBuyTime) {
     console.log('아직 구매할 수 없는 시간입니다.')
+    await sleep(1000)
     await buyGiftCard({ page, company, price, count })
     return
   }
