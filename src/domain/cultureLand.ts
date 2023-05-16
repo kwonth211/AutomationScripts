@@ -67,6 +67,9 @@ export const buyGiftCard = async ({
 
   await page.goto(
     `https://m.cultureland.co.kr/cpn/cpnApp.do?cpgm=${COMPANY_ID[company]}`,
+    {
+      waitUntil: 'networkidle2',
+    },
   )
 
   await sleep(1000)
@@ -78,10 +81,20 @@ export const buyGiftCard = async ({
 
   if (isNotBuyTime) {
     console.log('아직 구매할 수 없는 시간입니다.')
+    await page.reload({
+      waitUntil: 'networkidle2',
+    })
     await sleep(1000)
     await buyGiftCard({ page, company, price, count })
     return
   }
+  const title = await page.$('#section01 > div > dl')
+  const titleText = await title?.evaluate((el) => el.innerText)
+  if (titleText?.includes('지류')) {
+    console.log('지류 카드입니다.')
+    await buyGiftCard({ page, company, price, count })
+  }
+
   // A 회사의 50만원은 6번째
   // A 회사의 30만원은 5번째
   // B 회사의 50만원은 5번째
