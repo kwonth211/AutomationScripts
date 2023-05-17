@@ -81,9 +81,7 @@ export const buyGiftCard = async ({
 
   if (isNotBuyTime) {
     console.log('아직 구매할 수 없는 시간입니다.')
-    await page.reload({
-      waitUntil: 'networkidle2',
-    })
+
     await sleep(1000)
     await buyGiftCard({ page, company, price, count })
     return
@@ -92,7 +90,9 @@ export const buyGiftCard = async ({
   const titleText = await title?.evaluate((el) => el.innerText)
   if (titleText?.includes('지류')) {
     console.log('지류 카드입니다.')
+    await sleep(1000)
     await buyGiftCard({ page, company, price, count })
+    return
   }
 
   // A 회사의 50만원은 6번째
