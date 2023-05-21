@@ -1,117 +1,78 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>컬쳐랜드 쿠폰구매</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <script src="./../dist/renderer.js"></script>
 
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
     <style>
       #startMacro {
         margin-top: 15px;
       }
       .container {
+        padding: 20px;
+      }
+
+      #log {
         display: flex;
         flex-direction: column;
+      }
+
+      #log > div {
+        line-height: 20px;
+        height: 20px;
+        text-align: left;
+        padding-left: 10px;
+        font-size: 13px;
+      }
+      .mt-2 {
+        position: absolute;
+        font-size: 12px;
+        margin-top: 0px !important;
+        right: 0px;
+      }
+      h4 {
+        position: relative;
       }
     </style>
   </head>
   <body>
     <div class="container mt-5">
-      <h3 class="mb-4">컬쳐랜드 쿠폰구매</h3>
       <form id="macro-form">
         <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="options"
-            id="option1"
-            value="option1"
-            checked
-          />
-          <label class="form-check-label" for="option1"
-            >옵션1 : A회사 50만원 * 18개
-          </label>
+          <input class="form-check-input" type="radio" name="options" id="option1" value="option1" checked />
+          <label class="form-check-label" for="option1">옵션1 : A회사 50만원 * 20개 </label>
         </div>
         <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="options"
-            id="option2"
-            value="option2"
-          />
-          <label class="form-check-label" for="option2"
-            >옵션2 : A회사 30만원 * 33개</label
-          >
+          <input class="form-check-input" type="radio" name="options" id="option2" value="option2" />
+          <label class="form-check-label" for="option2">옵션2 : A회사 30만원 * 33개</label>
         </div>
         <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="options"
-            id="option3"
-            value="option3"
-          />
-          <label class="form-check-label" for="option3"
-            >옵션3 : A회사 50만원 * 18개</label
-          >
+          <input class="form-check-input" type="radio" name="options" id="option3" value="option3" />
+          <label class="form-check-label" for="option3">옵션3 : B회사 50만원 * 20개</label>
         </div>
         <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="options"
-            id="option3"
-            value="option3"
-          />
-          <label class="form-check-label" for="option3"
-            >옵션4 : B회사 50만원 * 18개</label
-          >
+          <input class="form-check-input" type="radio" name="options" id="option4" value="option4" />
+          <label class="form-check-label" for="option4">옵션4 : 신세계 * 18개</label>
         </div>
         <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="options"
-            id="option3"
-            value="option3"
-          />
-          <label class="form-check-label" for="option3"
-            >옵션5 : 신세계 * 18개</label
-          >
+          <input class="form-check-input" type="radio" name="options" id="option5" value="option5" />
+          <label class="form-check-label" for="option5">옵션5 : 롯데 * 18개</label>
         </div>
         <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="options"
-            id="option3"
-            value="option3"
-          />
-          <label class="form-check-label" for="option3"
-            >옵션6 : 롯데 * 18개</label
-          >
-        </div>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="options"
-            id="option3"
-            value="option3"
-          />
-          <label class="form-check-label" for="option3"
-            >옵션7 : 현대 * 18개</label
-          >
+          <input class="form-check-input" type="radio" name="options" id="option6" value="option6" />
+          <label class="form-check-label" for="option6">옵션6 : 현대 * 18개</label>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-4" id="start-macro">
-          매크로 시작
-        </button>
+        <button type="submit" class="btn btn-primary mt-4" id="start-macro">매크로 시작</button>
       </form>
+
+      <section class="mt-5">
+        <h4>로그 <button id="clear-button" class="btn btn-secondary mt-2" onclick="">로그 지우기</button></h4>
+        <div id="log" style="height: 200px; overflow: auto; border: 1px solid #ccc"></div>
+      </section>
     </div>
   </body>
 </html>

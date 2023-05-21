@@ -1,21 +1,13 @@
 import { Page } from 'puppeteer-core'
 import { sleep } from '../utils'
+import { log } from '../logger'
 
-export type SelectedOption = 'option1' | 'option2' | 'option3'
+export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'option5' | 'option6'
 
-export const login = async ({
-  page,
-  selectedOption,
-}: {
-  page: Page
-  selectedOption: SelectedOption
-}) => {
-  await page.goto(
-    'https://m.cultureland.co.kr/mmb/loginMain.do?agent_url=%2Fcpn%2FcpnApp.do%3Fcpgm%3Dsgckiosk',
-  )
-
+export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
+  await page.goto('https://m.cultureland.co.kr/mmb/loginMain.do?agent_url=%2Fcpn%2FcpnApp.do%3Fcpgm%3Dsgckiosk')
   const loginButtonSelector = '#btnLogin'
-
+  log('로그인 시작')
   await page.waitForFunction(
     (selector) => document.querySelector(selector) === null,
     {
@@ -24,30 +16,36 @@ export const login = async ({
     loginButtonSelector,
   )
 
-  // FOR TEST
-  // await buyGiftCard({ page, company: 'TEST', price: 10000, count: 3 })
-  // return
+  log(`선택된 옵션은 ${selectedOption} 입니다.`)
 
+  // 기프트 카드
   if (selectedOption === 'option1') {
     await buyGiftCard({ page, company: 'A', price: 500000, count: 20 })
   } else if (selectedOption === 'option2') {
     await buyGiftCard({ page, company: 'A', price: 300000, count: 33 })
   } else if (selectedOption === 'option3') {
-    for (let i = 0; i < 2; i++) {
-      if (i === 0) {
-        await buyGiftCard({ page, company: 'A', price: 500000, count: 20 })
-      } else {
-        await buyGiftCard({ page, company: 'B', price: 500000, count: 20 })
-      }
-    }
+    await buyGiftCard({ page, company: 'B', price: 500000, count: 20 })
   }
-  // await buyGiftCard({ page })
+
+  // 지류 카드
+  if (selectedOption === 'option4') {
+    // await buyJilyuCard({ page, company: 'TRAVEL', price: 10000, count: 3 })
+    await buyJilyuCard({ page, company: 'SHINSEGAE', price: 10000, count: 18 })
+  } else if (selectedOption === 'option5') {
+    await buyJilyuCard({ page, company: 'LOTTE', price: 30000, count: 18 })
+  } else if (selectedOption === 'option6') {
+    await buyJilyuCard({ page, company: 'HYUNDAI', price: 50000, count: 18 })
+  }
 }
 
 const COMPANY_ID = {
   A: 'sgckiosk2',
   B: 'sgckiosk',
   TEST: 'ematicon',
+  HYUNDAI: 'lhgc',
+  LOTTE: 'llgc',
+  SHINSEGAE: 'lsgc',
+  TRAVEL: 'ktravel',
 }
 
 export const buyGiftCard = async ({
@@ -65,12 +63,9 @@ export const buyGiftCard = async ({
     return
   }
 
-  await page.goto(
-    `https://m.cultureland.co.kr/cpn/cpnApp.do?cpgm=${COMPANY_ID[company]}`,
-    {
-      waitUntil: 'networkidle2',
-    },
-  )
+  await page.goto(`https://m.cultureland.co.kr/cpn/cpnApp.do?cpgm=${COMPANY_ID[company]}`, {
+    waitUntil: 'networkidle2',
+  })
 
   await sleep(1000)
 
@@ -80,7 +75,14 @@ export const buyGiftCard = async ({
   const isNotBuyTime = notBuyTimeElement !== null
 
   if (isNotBuyTime) {
-    console.log('아직 구매할 수 없는 시간입니다.')
+    const innerText = await notBuyTimeElement.evaluate((el) => el.innerText)
+
+    if (innerText.includes('현재 접속인원')) {
+      await buyGiftCard({ page, company, price, count })
+      return
+    }
+
+    log('구매할 수 있는 시간이 될 때까지 대기합니다.')
 
     await sleep(1000)
     await buyGiftCard({ page, company, price, count })
@@ -89,7 +91,7 @@ export const buyGiftCard = async ({
   const title = await page.$('#section01 > div > dl')
   const titleText = await title?.evaluate((el) => el.innerText)
   if (titleText?.includes('지류')) {
-    console.log('지류 카드입니다.')
+    log('지류 카드입니다.')
     await sleep(1000)
     await buyGiftCard({ page, company, price, count })
     return
@@ -107,31 +109,21 @@ export const buyGiftCard = async ({
     aSelector = `#choiceCoupon > li:nth-child(5) > a `
   }
 
-  // FOR TEST
-  // aSelector = '#choiceCoupon > li:nth-child(1) > a'
-
   const inputSelector = aSelector + ` > input`
 
   await page.waitForSelector(inputSelector)
 
-  const isSoldOut = await page.$eval(
-    inputSelector,
-    (input) => (input as HTMLInputElement).disabled,
-  )
+  const isSoldOut = await page.$eval(inputSelector, (input) => (input as HTMLInputElement).disabled)
 
-  const inputPrice = await page.$eval(
-    inputSelector,
-    (input) => (input as HTMLInputElement).value,
-  )
+  const inputPrice = await page.$eval(inputSelector, (input) => (input as HTMLInputElement).value)
 
-  // Sold Out이면 다음 항목으로 넘어감
   if (isSoldOut) {
-    console.log('This item is sold out')
+    log('이 상품은 품절되었습니다.')
     return
   }
 
   if (Number(inputPrice) !== price) {
-    console.log('가격이 다름')
+    log('가격이 다름')
     return
   }
   await page.click(aSelector)
@@ -161,6 +153,82 @@ export const buyGiftCard = async ({
   await page.waitForSelector(confirmButtonSelector)
   await page.click(confirmButtonSelector)
 
-  console.log('구매 완료!!')
+  log('구매 완료!!')
   await buyGiftCard({ page, company, price, count: count - 1 })
+}
+
+export const buyJilyuCard = async ({
+  page,
+  company,
+  price,
+  count,
+}: {
+  page: Page
+  company: keyof typeof COMPANY_ID
+  price: number
+  count: number // 20 or 33
+}) => {
+  await page.goto(`https://m.cultureland.co.kr/cpn/cpnAppDlvry.do?cpgm=${COMPANY_ID[company]}`, {
+    waitUntil: 'networkidle2',
+  })
+
+  await sleep(1000)
+
+  const soldOutSelector = '.soldout'
+
+  const soldOutElement = await page.$(soldOutSelector)
+  const isSoldOut = soldOutElement !== null
+  if (isSoldOut) {
+    log('Sold out 되었습니다.')
+    return
+  }
+
+  const notBuyTimeSelector = 'div.contLy > p'
+
+  const notBuyTimeElement = await page.$(notBuyTimeSelector)
+  const isNotBuyTime = notBuyTimeElement !== null
+
+  if (isNotBuyTime) {
+    const innerText = await notBuyTimeElement.evaluate((el) => el.innerText)
+
+    if (innerText.includes('현재 접속인원')) {
+      await buyJilyuCard({ page, company, price, count })
+      return
+    }
+
+    log('구매할 수 있는 시간이 될 때까지 대기합니다.')
+    await sleep(1000)
+    await buyJilyuCard({ page, company, price, count })
+    return
+  }
+  const title = await page.$('#section01 > div > dl')
+  const titleText = await title?.evaluate((el) => el.innerText)
+
+  if (!titleText?.includes('지류')) {
+    log('지류 카드가 아닙니다.')
+    await buyJilyuCard({ page, company, price, count })
+    return
+  }
+
+  const aCountSelector = '#section01 > div > div.amountBtm > div > a.plus'
+  await page.waitForSelector(aCountSelector)
+
+  for (let i = 0; i < count - 1; i++) {
+    await page.click(aCountSelector)
+  }
+
+  const nextButtonSelector = '#nextStep'
+  await page.click(nextButtonSelector)
+
+  // 결제 버튼
+  const payButtonSelector = '#btnBuyDlvry'
+  await page.waitForSelector(payButtonSelector)
+  await page.click(payButtonSelector)
+
+  // 확인 버튼
+  const confirmButtonSelector = '.modal.alert .btn_action'
+  await page.waitForSelector(confirmButtonSelector)
+  await page.click(confirmButtonSelector)
+
+  log('구매 완료!!')
 }
