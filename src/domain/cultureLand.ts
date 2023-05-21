@@ -19,7 +19,7 @@ export const login = async ({
   await page.waitForFunction(
     (selector) => document.querySelector(selector) === null,
     {
-      timeout: 30000,
+      timeout: 60 * 5 * 1000,
     },
     loginButtonSelector,
   )
