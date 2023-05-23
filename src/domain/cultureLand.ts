@@ -75,7 +75,7 @@ export const buyGiftCard = async ({
     waitUntil: 'networkidle2',
   })
 
-  await sleep(500)
+  await sleep(1000)
 
   const notBuyTimeSelector = 'div.contLy > p'
 
@@ -86,7 +86,6 @@ export const buyGiftCard = async ({
     const innerText = await notBuyTimeElement.evaluate((el) => el.innerText)
 
     if (innerText.includes('현재 접속인원')) {
-      await sleep(500)
       log('접속 인원 초과.')
       await buyGiftCard({ page, company, price, count })
       return
