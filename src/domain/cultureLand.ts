@@ -2,7 +2,7 @@ import { Page } from 'puppeteer-core'
 import { sleep } from '../utils'
 import { log } from '../logger'
 
-export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'option5' | 'option6'
+export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'option5' | 'option6' | 'option7'
 
 export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
   await page.goto('https://m.cultureland.co.kr/mmb/loginMain.do?agent_url=%2Fcpn%2FcpnApp.do%3Fcpgm%3Dsgckiosk')
@@ -25,15 +25,23 @@ export const login = async ({ page, selectedOption }: { page: Page; selectedOpti
     await buyGiftCard({ page, company: 'A', price: 300000, count: 33 })
   } else if (selectedOption === 'option3') {
     await buyGiftCard({ page, company: 'B', price: 500000, count: 20 })
+  } else if (selectedOption === 'option4') {
+    for (let i = 0; i < 2; i++) {
+      if (i === 0) {
+        await buyGiftCard({ page, company: 'A', price: 500000, count: 20 })
+      } else {
+        await buyGiftCard({ page, company: 'B', price: 500000, count: 20 })
+      }
+    }
   }
 
   // 지류 카드
-  if (selectedOption === 'option4') {
+  if (selectedOption === 'option5') {
     // await buyJilyuCard({ page, company: 'TRAVEL', price: 10000, count: 3 })
     await buyJilyuCard({ page, company: 'SHINSEGAE', price: 10000, count: 18 })
-  } else if (selectedOption === 'option5') {
-    await buyJilyuCard({ page, company: 'LOTTE', price: 30000, count: 18 })
   } else if (selectedOption === 'option6') {
+    await buyJilyuCard({ page, company: 'LOTTE', price: 30000, count: 18 })
+  } else if (selectedOption === 'option7') {
     await buyJilyuCard({ page, company: 'HYUNDAI', price: 50000, count: 18 })
   }
 }
@@ -67,7 +75,7 @@ export const buyGiftCard = async ({
     waitUntil: 'networkidle2',
   })
 
-  await sleep(1000)
+  await sleep(500)
 
   const notBuyTimeSelector = 'div.contLy > p'
 
@@ -78,6 +86,8 @@ export const buyGiftCard = async ({
     const innerText = await notBuyTimeElement.evaluate((el) => el.innerText)
 
     if (innerText.includes('현재 접속인원')) {
+      await sleep(500)
+      log('접속 인원 초과.')
       await buyGiftCard({ page, company, price, count })
       return
     }
@@ -119,6 +129,8 @@ export const buyGiftCard = async ({
 
   if (isSoldOut) {
     log('이 상품은 품절되었습니다.')
+    await sleep(500)
+    await buyGiftCard({ page, company, price, count })
     return
   }
 
@@ -154,6 +166,8 @@ export const buyGiftCard = async ({
   await page.click(confirmButtonSelector)
 
   log('구매 완료!!')
+  await sleep(500)
+
   await buyGiftCard({ page, company, price, count: count - 1 })
 }
 
@@ -172,7 +186,7 @@ export const buyJilyuCard = async ({
     waitUntil: 'networkidle2',
   })
 
-  await sleep(1000)
+  await sleep(500)
 
   const soldOutSelector = '.soldout'
 
@@ -192,6 +206,9 @@ export const buyJilyuCard = async ({
     const innerText = await notBuyTimeElement.evaluate((el) => el.innerText)
 
     if (innerText.includes('현재 접속인원')) {
+      log('접속 인원 초과.')
+      await sleep(500)
+
       await buyJilyuCard({ page, company, price, count })
       return
     }
