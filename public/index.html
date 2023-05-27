@@ -39,7 +39,7 @@
       <form id="footballForm">
         <div class="row">
           <div class="col-md-6">
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label>구장 선택</label><br />
               <input type="checkbox" id="courtA" name="courtA" value="A" />
               <label for="courtA"> A 구장</label><br />
@@ -49,11 +49,12 @@
               <label for="courtC"> C 구장</label><br />
               <input type="checkbox" id="courtD" name="courtD" value="D" />
               <label for="courtD"> D 구장</label><br />
-            </div>
+            </div> -->
 
             <div class="form-group">
               <label>날짜 선택</label>
-              <input type="date" required class="form-control form-control-sm" id="date" name="date" />
+              <input type="date" class="form-control form-control-sm" id="date" name="date" />
+              <!-- required -->
             </div>
 
             <div class="form-group">
@@ -111,104 +112,43 @@
 
           <div class="col-md-6">
             <div class="form-group">
-              <label>휴대폰 번호</label>
-
-              <div class="phoneWrapper">
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="area-code"
-                  maxlength="3"
-                  size="3"
-                  disabled
-                  value="010"
-                />
-                <span>-</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="middle-number"
-                  maxlength="4"
-                  size="4"
-                  required
-                />
-                <span>-</span>
-                <input
-                  type="text"
-                  class="form-control form-control-sm"
-                  name="last-number"
-                  maxlength="4"
-                  size="4"
-                  required
-                />
-              </div>
+              <label>사용 목적</label>
+              <textarea class="form-control form-control-sm" id="purpose" name="purpose" rows="3"></textarea>
             </div>
 
             <div class="form-group">
-              <label>Email</label>
+              <label>업체명(실명기재)</label>
+              <input type="text" class="form-control form-control-sm" id="companyName" name="companyName" />
+            </div>
+
+            <div class="form-group">
+              <label>도로명 주소 검색</label>
               <input
-                required
-                type="email"
-                class="form-control form-control-sm"
-                id="email"
-                name="email"
-                placeholder="Email"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>구분</label>
-              <input type="radio" id="individual" name="division" value="individual" />
-              <label for="individual">개인</label>
-              <input type="radio" id="group" name="division" checked value="group" />
-              <label for="group">단체</label>
-            </div>
-
-            <div class="form-group">
-              <label>행사명</label>
-              <input
-                required
                 type="text"
                 class="form-control form-control-sm"
-                id="event"
-                name="event"
+                id="address"
+                name="address"
+                placeholder="검색할 도로명 주소를 정확히 입력해주세요"
+              />
+            </div>
+            <div class="form-group">
+              <label>상세 주소</label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="addressDetail"
+                name="addressDetail"
                 placeholder="행사명"
               />
             </div>
 
             <div class="form-group">
-              <label>참여단체</label>
-              <input
-                required
-                type="text"
-                class="form-control form-control-sm"
-                id="participatingOrganization"
-                name="participatingOrganization"
-                placeholder="참여단체"
-              />
+              <label>연락처</label>
+              <input type="text" type="tel" class="form-control form-control-sm" name="tel" />
             </div>
-
             <div class="form-group">
-              <label>참여인원</label>
-              <input
-                required
-                type="number"
-                class="form-control form-control-sm"
-                id="participants"
-                name="participants"
-                placeholder="참여인원"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>행사내용</label>
-              <textarea
-                required
-                class="form-control form-control-sm"
-                id="eventDetails"
-                name="eventDetails"
-                rows="3"
-              ></textarea>
+              <label>비밀번호</label>
+              <input type="text" class="form-control form-control-sm" name="password" />
             </div>
 
             <button type="submit" class="btn btn-primary">예약하기</button>

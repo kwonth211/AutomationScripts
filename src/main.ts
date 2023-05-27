@@ -2,10 +2,10 @@ import { app, BrowserWindow, ipcMain, powerSaveBlocker } from 'electron'
 import puppeteer from 'puppeteer-core'
 import path from 'path'
 import { login } from './login'
-import { detectDialog, sleep } from './utils'
+import { closePopups, detectDialog, sleep } from './utils'
 import dotenv from 'dotenv'
 import { visit } from './domain/usedCafe'
-import { authenticateUser, reserve } from './domain/buk-gu-football'
+import { authenticateUser } from './domain/busan-seo-gu-football'
 const chromeLauncher = require('chrome-launcher')
 
 const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'
@@ -33,7 +33,7 @@ async function runMacro({ isBackground, formData }: { formData: any; isBackgroun
   detectDialog({ page, browser, formData })
 
   try {
-    await authenticateUser({ page })
+    await authenticateUser({ page, browser })
 
     // test용
     // for (let court of formData.courts) {
