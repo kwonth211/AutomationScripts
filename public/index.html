@@ -14,28 +14,7 @@
       .container {
         padding: 20px;
       }
-      #time1,
-      #time2,
-      #time3,
-      #time4,
-      #time5,
-      #time6,
-      #time7,
-      #time8,
-      #time9,
-      #time10,
-      #time11,
-      #time12,
-      #time13,
-      #time14,
-      #time15,
-      #time16 {
-        margin-right: 6px;
-      }
-      .phoneWrapper {
-        display: flex;
-        flex-direction: column;
-      }
+
       #log {
         display: flex;
         flex-direction: column;
@@ -49,22 +28,16 @@
     <div class="container mt-5">
       <h3 class="mb-4">컬쳐랜드 쿠폰구매</h3>
       <form id="macro-form">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="options" id="option1" value="option1" checked />
-          <label class="form-check-label" for="option1">옵션1 : A회사 50만원 * 20개 </label>
+        <label for="minRange">최소 조회수:</label>
+        <input type="number" id="minRange" name="minRange" min="0" step="1" required />
+        <label for="maxRange">최대 조회수:</label>
+        <input type="number" id="maxRange" name="maxRange" min="0" step="1" required />
+        <div>
+          <input type="checkbox" id="background" name="background" checked />
+          <label for="background">백그라운드 실행 여부:</label>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="options" id="option2" value="option2" />
-          <label class="form-check-label" for="option2">옵션2 : A회사 30만원 * 33개</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="options" id="option3" value="option3" />
-          <label class="form-check-label" for="option3">옵션3 : A회사 50만원 * 20개 + B회사 50만원 * 20개</label>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-4" id="start-macro">매크로 시작</button>
+        <button id="startMacro" class="btn btn-primary mt-4" type="submit">매크로 시작</button>
       </form>
-
       <section class="mt-5">
         <h4>로그</h4>
         <div id="log" style="height: 200px; overflow: auto; border: 1px solid #ccc"></div>

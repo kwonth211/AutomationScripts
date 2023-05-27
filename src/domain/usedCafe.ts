@@ -51,8 +51,9 @@ export const visit = async ({
 
     if (viewCountNumber < randomViewCount) {
       const newPagePromise = new Promise((x) => browser.once('targetcreated', (target) => x(target.page())))
-      log(`클릭됨 \n ${titleText}`)
-      log(`기존 조회수 \n  ${viewCountNumber}`)
+      log(`클릭된 닉네임: ${nicknameText}`)
+      log(`클릭된 타이틀: ${titleText}`)
+      log(`기존 조회수: ${viewCountNumber}`)
       await alink.click({ button: 'middle' })
       await sleep(2000)
       const newPage = (await newPagePromise) as Page // 새 페이지를 얻음
@@ -61,6 +62,7 @@ export const visit = async ({
     }
   }
 
+  log('2분간 대기 합니다..')
   await sleep(countInterval)
 
   await visit({ page, browser, randomViewCount })

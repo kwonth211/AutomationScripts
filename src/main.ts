@@ -1,10 +1,11 @@
 import { app, ipcMain } from 'electron'
 import puppeteer from 'puppeteer-core'
 import path from 'path'
-import { createWindow } from './utils'
+import { createWindow, detectDialog } from './utils'
 import dotenv from 'dotenv'
 import { main } from './domain/cultureLand/main'
 import { log } from './logger'
+import { visit } from './domain/usedCafe'
 const chromeLauncher = require('chrome-launcher')
 
 const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'
@@ -17,26 +18,38 @@ if (process.env.NODE_ENV === 'development') {
     awaitWriteFinish: true,
   })
 }
-
-async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'option2' | 'option3' }) {
+async function runMacro({
+  minRange,
+  maxRange,
+  isBackground,
+}: {
+  minRange: string
+  maxRange: string
+  isBackground: boolean
+}) {
+  const minRangeNumber = parseInt(minRange)
+  const maxRangeNumber = parseInt(maxRange)
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const browser = await puppeteer.launch({
-    // headless: 'new',
-    headless: false,
+    headless: isBackground,
     defaultViewport: null,
     executablePath: chromePath,
-    args: [
-      '--start-maximized',
-      // `--disable-extensions-except=${extensionPath}`,
-      // `--load-extension=${extensionPath}`,
-    ],
+    args: ['--start-maximized'],
   })
 
   const page = await browser.newPage()
-  await page.setDefaultTimeout(10000)
+  detectDialog({ page })
+
+  const randomViewCount = Math.floor(Math.random() * (maxRangeNumber - minRangeNumber + 1)) + minRangeNumber
+
   try {
-    await main({ page, selectedOption })
+    log(`랜덤 조회수: ${randomViewCount}`)
+    await visit({
+      page,
+      browser,
+      randomViewCount,
+    })
   } catch (error) {
     log('매크로 실행 중 오류 발생')
   }
@@ -49,11 +62,13 @@ app.on('window-all-closed', () => {
   // if (process.platform !== 'darwin') {
   // }
 })
-
-ipcMain.on('start-macro', (_, { selectedOption }) => {
-  runMacro({ selectedOption })
-    .then(() => {})
+ipcMain.on('start-macro', (_, { minRange, maxRange, isBackground }) => {
+  runMacro({ minRange, maxRange, isBackground })
+    .then(() => {
+      // 매크로 작업이 완료되면 렌더러 프로세스에 알립니다.
+      // win.webContents.send('macro-finished');
+    })
     .catch((error) => {
-      console.error('매크로 실행 중 오류 발생:', error)
+      log('매크로 실행 중 오류 발생:', error)
     })
 })
