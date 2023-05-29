@@ -1,6 +1,6 @@
 {
-  "name": "AutomationScripts",
-  "version": "1.0.2",
+  "name": "used-country",
+  "version": "1.0.3",
   "main": "dist/main.js",
   "repository": "https://github.com/kwonth211/AutomationScripts.git",
   "author": "kwonth211 <kwonth211@naver.com>",
