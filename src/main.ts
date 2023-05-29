@@ -51,7 +51,7 @@ async function runMacro({
       randomViewCount,
     })
   } catch (error) {
-    log('매크로 실행 중 오류 발생')
+    log('매크로 실행 중 오류 발생', error)
   }
 }
 
