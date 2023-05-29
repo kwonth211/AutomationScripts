@@ -7,6 +7,7 @@ export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'op
 export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
   await page.goto('https://www.cultureland.co.kr/signin/login.do')
   const loginButtonSelector = '#contents > div.contents > div > div > div:nth-child(1) > div:nth-child(2) > button'
+  await page.waitForSelector(loginButtonSelector)
   log('로그인 시작')
   await page.waitForFunction(
     (selector) => document.querySelector(selector) === null,
