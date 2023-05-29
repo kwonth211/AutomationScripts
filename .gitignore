@@ -3,3 +3,6 @@ dist
 dist.zip
 .env
 .DS_Store
+*.zip
+used-country
+buy-cultureland-pc

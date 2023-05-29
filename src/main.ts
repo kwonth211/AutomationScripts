@@ -21,20 +21,24 @@ if (process.env.NODE_ENV === 'development') {
 async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'option2' | 'option3' }) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
+  const extensionPath =
+    '/Users/kwontaehoon/Library/Application Support/Google/Chrome/Default/Extensions/dncepekefegjiljlfbihljgogephdhph/1.0.1.15_0'
+
+  let args = ['--start-maximized']
+  if (process.platform === 'darwin') {
+    args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
+  }
+
   const browser = await puppeteer.launch({
     // headless: 'new',
     headless: false,
     defaultViewport: null,
     executablePath: chromePath,
-    args: [
-      '--start-maximized',
-      // `--disable-extensions-except=${extensionPath}`,
-      // `--load-extension=${extensionPath}`,
-    ],
+    args: args,
   })
 
   const page = await browser.newPage()
-  await page.setDefaultTimeout(10000)
+  await page.setDefaultTimeout(5000)
   try {
     await main({ page, selectedOption })
   } catch (error) {
