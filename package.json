@@ -1,6 +1,6 @@
 {
-  "name": "AutomationScripts",
-  "version": "1.0.0",
+  "name": "used-country",
+  "version": "1.0.3",
   "main": "dist/main.js",
   "repository": "https://github.com/kwonth211/AutomationScripts.git",
   "author": "kwonth211 <kwonth211@naver.com>",
@@ -36,19 +36,15 @@
     "appId": "com.example.AutomationScripts",
     "mac": {
       "icon": "build/icon.icns",
-      "extraResources": [
-        {
-          "from": "/opt/homebrew/bin/python3",
-          "to": "python3"
-        }
-      ]
+      "extraResources": [{
+        "from": "/opt/homebrew/bin/python3",
+        "to": "python3"
+      }]
     },
-    "extraResources": [
-      {
-        "from": "./.env",
-        "to": "resources/.env"
-      }
-    ],
+    "extraResources": [{
+      "from": "./.env",
+      "to": "resources/.env"
+    }],
     "win": {
       "icon": "build/icon.ico"
     },
@@ -57,6 +53,7 @@
     },
     "asar": false,
     "directories": {
+      "output": "used-country",
       "buildResources": "build/resources"
     },
     "files": [

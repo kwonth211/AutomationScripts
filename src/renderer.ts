@@ -4,18 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (macroForm) {
     macroForm.addEventListener('submit', (e) => {
       e.preventDefault()
-      let options = document.getElementsByName('options') as NodeListOf<HTMLInputElement>
 
-      let selectedOption
-      for (let i = 0; i < options.length; i++) {
-        if (options[i].checked) {
-          selectedOption = options[i].value
-          break
-        }
+      const minRange = (document.getElementById('minRange') as HTMLInputElement).value
+      const maxRange = (document.getElementById('maxRange') as HTMLInputElement).value
+
+      const isBackground = (document.getElementById('background') as HTMLInputElement).checked
+
+      if (parseInt(minRange) > parseInt(maxRange)) {
+        alert('최소 조회수는 최대 조회수보다 작아야 합니다.')
+        return
       }
-
       window?.electron.send('start-macro', {
-        selectedOption,
+        minRange,
+        maxRange,
+        isBackground,
       })
     })
   }
@@ -28,6 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 window.electron.on('log-message', (logMessage: any) => {
   const logElement = document.querySelector('#log') as HTMLDivElement
   const messageElement = document.createElement('div')
-  messageElement.textContent = logMessage
+  messageElement.innerHTML = logMessage
   logElement.appendChild(messageElement)
 })
