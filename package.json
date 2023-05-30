@@ -31,35 +31,6 @@
     "build:mac": "tsc && electron-builder --mac",
     "build:win": "tsc && electron-builder --win --x64",
     "build:linux": "tsc && electron-builder --linux"
-  },
-  "build": {
-    "appId": "com.example.AutomationScripts",
-    "mac": {
-      "icon": "build/icon.icns",
-      "extraResources": [{
-        "from": "/opt/homebrew/bin/python3",
-        "to": "python3"
-      }]
-    },
-    "extraResources": [{
-      "from": "./.env",
-      "to": "resources/.env"
-    }],
-    "win": {
-      "icon": "build/icon.ico"
-    },
-    "linux": {
-      "icon": "build/icon.png"
-    },
-    "asar": false,
-    "directories": {
-      "output": "buy-cultureland-pc",
-      "buildResources": "build/resources"
-    },
-    "files": [
-      "dist/**/*",
-      "build/**/*",
-      "public/**/*"
-    ]
   }
+
 }
