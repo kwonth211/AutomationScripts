@@ -2,7 +2,7 @@ import { Page } from 'puppeteer-core'
 import { sleep } from '../utils'
 import { log } from '../logger'
 
-export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'option5' | 'option6' | 'option7'
+export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'option5'
 
 export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
   await page.goto('https://www.cultureland.co.kr/signin/login.do')
@@ -34,6 +34,8 @@ export const login = async ({ page, selectedOption }: { page: Page; selectedOpti
         await buyGiftCard({ page, company: 'B', price: 500000, count: 20 })
       }
     }
+  } else if (selectedOption === 'option5') {
+    await buyGiftCard({ page, company: 'LOTTE', price: 100000, count: 10 })
   }
 }
 
@@ -77,6 +79,8 @@ export const buyGiftCard = async ({
       _window.goProdList('신세계모바일 (키오스크형)', 'sgckiosk', '150')
     } else if (company === 'HYUNDAI') {
       _window.goProdList('현대모바일상품권', 'hgc', '139')
+    } else if (company === 'LOTTE') {
+      _window.goProdList('(익일발송)롯데모바일상품권', 'lotte', '141')
     }
   }, company)
 
@@ -90,6 +94,8 @@ export const buyGiftCard = async ({
   } else if (company === 'B' && price === 500000) {
     idx = 5
   } else if (company === 'HYUNDAI' && price === 100000) {
+    idx = 1
+  } else if (company === 'LOTTE' && price === 100000) {
     idx = 1
   }
 
@@ -131,6 +137,8 @@ export const buyGiftCard = async ({
       // 4. company가 HYUNDAI이고 가격이 10만원일때
       else if (company === 'HYUNDAI' && price === 100000) {
         _window.goDetail3('1681', 'hgc', '', '0', '0', '0', '0', _window)
+      } else if (company === 'LOTTE' && price === 100000) {
+        _window.goDetail3('1949', 'lotte', '', '0', '0', '0', '0', _window)
       }
     },
     company,
@@ -163,15 +171,12 @@ export const buyGiftCard = async ({
       // 확인을 위해 결제 버튼 요소를 가져옵니다.
       payButton = await page.$(payButtonSelector)
 
-      log({ payButton })
       if (payButton) {
         await payButton.click()
-        sleep(200)
       } else {
         break
       }
     } catch (error) {
-      log('결제버튼 클릭중 에러 발생', error)
       break
     }
   }
