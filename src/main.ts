@@ -5,6 +5,9 @@ import { createWindow } from './utils'
 import dotenv from 'dotenv'
 import { main } from './domain/cultureLand/main'
 import { log } from './logger'
+
+app.commandLine.appendSwitch('max-old-space-size', '4096')
+
 const chromeLauncher = require('chrome-launcher')
 
 const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'

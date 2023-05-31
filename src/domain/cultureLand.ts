@@ -18,7 +18,7 @@ export const login = async ({ page, selectedOption }: { page: Page; selectedOpti
   )
 
   log(`선택된 옵션은 ${selectedOption} 입니다.`)
-
+  await sleep(1000)
   // 기프트 카드
   if (selectedOption === 'option1') {
     await buyGiftCard({ page, company: 'A', price: 500000, count: 20 })
@@ -65,7 +65,6 @@ export const buyGiftCard = async ({
   }
 
   await page.goto('https://www.cultureland.co.kr/coupon/cpnList.do')
-
   await page.evaluate(() => {
     ;(window as any).CommBannerClose()
   })
