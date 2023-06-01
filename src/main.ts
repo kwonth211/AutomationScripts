@@ -37,11 +37,12 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
     headless: false,
     defaultViewport: null,
     executablePath: chromePath,
+    protocolTimeout: 300000,
     args: args,
   })
 
   const page = await browser.newPage()
-  await page.setDefaultTimeout(5000)
+  await page.setDefaultTimeout(10000)
   try {
     await main({ page, selectedOption })
   } catch (error) {

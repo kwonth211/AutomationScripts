@@ -6,15 +6,15 @@ export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'op
 
 export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
   await page.goto('https://www.cultureland.co.kr/signin/login.do')
-  const loginButtonSelector = '#contents > div.contents > div > div > div:nth-child(1) > div:nth-child(2) > button'
-  await page.waitForSelector(loginButtonSelector)
+  const loginFormSelector = '#loginForm'
+  await page.waitForSelector(loginFormSelector)
   log('로그인 시작')
   await page.waitForFunction(
     (selector) => document.querySelector(selector) === null,
     {
       timeout: 60 * 5 * 1000,
     },
-    loginButtonSelector,
+    loginFormSelector,
   )
 
   log(`선택된 옵션은 ${selectedOption} 입니다.`)
