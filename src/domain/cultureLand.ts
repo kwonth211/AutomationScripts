@@ -151,12 +151,12 @@ export const buyGiftCard = async ({
   await page.click(buyButtonSelector)
 
   // 동의 버튼
-  const agreeButtonSelector = '#frm > div:nth-child(16) > fieldset > div > label'
+  const agreeButtonSelector = '#frm > div:nth-child(19) > fieldset > div > label'
   await page.waitForSelector(agreeButtonSelector)
   await page.click(agreeButtonSelector)
 
   // 동의 버튼2
-  const agreeButtonSelector2 = '#frm > div:nth-child(17) > div > div > label'
+  const agreeButtonSelector2 = '#frm > div:nth-child(20) > div > div > label'
   await page.waitForSelector(agreeButtonSelector2)
   await page.click(agreeButtonSelector2)
 
