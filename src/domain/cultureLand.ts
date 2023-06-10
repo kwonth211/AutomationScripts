@@ -61,7 +61,7 @@ export const buyGiftCard = async ({
   count: number // 20 or 33
 }) => {
   if (count === 0) {
-    return
+    log('구매한 갯수가 0이되도 종료되지 않습니다.')
   }
 
   await page.goto('https://www.cultureland.co.kr/coupon/cpnList.do')
@@ -144,19 +144,26 @@ export const buyGiftCard = async ({
     price,
   )
 
+  // const alertButtonElement = await page.$('#alertPop > div > div  button')
+  // if (alertButtonElement !== null) {
+  //   await alertButtonElement.click()
+  // }
+
   const buyButtonSelector =
     '#contents > div.contents > div.section.sec-slide > div > div.btn-cont > div > a.btn.primary'
 
   await page.waitForSelector(buyButtonSelector)
   await page.click(buyButtonSelector)
 
+  // await sleep(300)
+
   // 동의 버튼
-  const agreeButtonSelector = '#frm > div:nth-child(19) > fieldset > div > label'
+  const agreeButtonSelector = '#agreement-pop-00'
   await page.waitForSelector(agreeButtonSelector)
   await page.click(agreeButtonSelector)
 
   // 동의 버튼2
-  const agreeButtonSelector2 = '#frm > div:nth-child(20) > div > div > label'
+  const agreeButtonSelector2 = '#agreement-pop-01'
   await page.waitForSelector(agreeButtonSelector2)
   await page.click(agreeButtonSelector2)
 
@@ -172,6 +179,11 @@ export const buyGiftCard = async ({
 
       if (payButton) {
         await payButton.click()
+
+        const alertButtonElement = await page.$('#alertPop > div > div > div > div > button')
+        if (alertButtonElement !== null) {
+          await alertButtonElement.click()
+        }
       } else {
         break
       }
