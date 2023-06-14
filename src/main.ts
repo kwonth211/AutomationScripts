@@ -3,8 +3,9 @@ import puppeteer from 'puppeteer-core'
 import path from 'path'
 import { createWindow } from './utils'
 import dotenv from 'dotenv'
-import { main } from './domain/cultureLand/main'
+
 import { log } from './logger'
+import { main } from './domain/key-escape/main'
 
 app.commandLine.appendSwitch('max-old-space-size', '4096')
 
@@ -44,7 +45,7 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
   const page = await browser.newPage()
   await page.setDefaultTimeout(10000)
   try {
-    await main({ page, selectedOption })
+    await main({ page })
   } catch (error) {
     log('매크로 실행 중 오류 발생', error)
   }

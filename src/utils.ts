@@ -39,7 +39,4 @@ export const createWindow = async () => {
   powerSaveBlocker.start('prevent-display-sleep')
 
   await win.loadFile('./public/index.html')
-
-  log('로그인 실패시 반드시 프로그램을 재 실행해주세요.')
-  log('반드시 touchEn 프로그램이 설치되어 있어야합니다.')
 }

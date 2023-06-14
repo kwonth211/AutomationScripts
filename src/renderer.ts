@@ -5,19 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (macroForm) {
     macroForm.addEventListener('submit', (e) => {
       e.preventDefault()
-      let options = document.getElementsByName('options') as NodeListOf<HTMLInputElement>
 
-      let selectedOption
-      for (let i = 0; i < options.length; i++) {
-        if (options[i].checked) {
-          selectedOption = options[i].value
-          break
-        }
-      }
-
-      window?.electron.send('start-macro', {
-        selectedOption,
-      })
+      window?.electron.send('start-macro', {})
     })
   }
   if (clearButton) {
