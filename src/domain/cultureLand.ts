@@ -149,6 +149,8 @@ export const buyGiftCard = async ({
   //   await alertButtonElement.click()
   // }
 
+  await page.waitForNavigation()
+
   const buyButtonSelector =
     '#contents > div.contents > div.section.sec-slide > div > div.btn-cont > div > a.btn.primary'
 
