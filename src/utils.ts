@@ -1,6 +1,7 @@
 import { Browser, Page } from 'puppeteer-core'
 import { BrowserWindow, powerSaveBlocker } from 'electron'
 import path from 'path'
+import { log } from './logger'
 
 export const detectDialog = ({ page }: { page: Page }) => {
   page.on('dialog', async (dialog) => {
@@ -38,4 +39,8 @@ export const createWindow = () => {
   powerSaveBlocker.start('prevent-display-sleep')
 
   win.loadFile('./public/index.html')
+
+  setTimeout(() => {
+    log('띄어쓰기를 포함에서 닉네임을 입력해주세요. ex) 24시 마루핀, 원모어핀')
+  }, 1000)
 }

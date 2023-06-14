@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>웃골 풋살장 예약시스템</title>
+    <title>중고나라</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <script src="./../dist/renderer.js"></script>
 
@@ -26,8 +26,13 @@
   </head>
   <body>
     <div class="container mt-5">
-      <h3 class="mb-4">컬쳐랜드 쿠폰구매</h3>
+      <h3 class="mb-4">중고나라 조회수</h3>
       <form id="macro-form">
+        <label for="nickname1">닉네임1:</label>
+        <input type="text" id="nickname1" name="nickname1" value="마루핀24시" required />
+        <label for="nickname2">닉네임2:</label>
+        <input type="text" id="nickname2" name="nickname2" value="원모어핀24시" required />
+        <br />
         <label for="minRange">최소 조회수:</label>
         <input type="number" id="minRange" name="minRange" min="0" step="1" required />
         <label for="maxRange">최대 조회수:</label>

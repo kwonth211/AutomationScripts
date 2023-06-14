@@ -7,10 +7,14 @@ export const visit = async ({
   page,
   browser,
   randomViewCount,
+  nickname1,
+  nickname2,
 }: {
   randomViewCount: number
   page: Page
   browser: Browser
+  nickname1: string
+  nickname2: string
 }) => {
   await page.goto('https://cafe.naver.com/joonggonara', {
     waitUntil: 'networkidle2',
@@ -25,14 +29,14 @@ export const visit = async ({
 
   if (!iframeElement) {
     log('iframeElement 없음')
-    await visit({ page, browser, randomViewCount })
+    await visit({ page, browser, randomViewCount, nickname1, nickname2 })
     return
   }
   const frame = await iframeElement.contentFrame()
 
   if (!frame) {
     log('frame 없음')
-    await visit({ page, browser, randomViewCount })
+    await visit({ page, browser, randomViewCount, nickname1, nickname2 })
     return
   }
   await frame.waitForSelector(tbodySelector)
@@ -45,13 +49,13 @@ export const visit = async ({
     const alink = await title.$('a')
     if (!alink) {
       log('alink 없음')
-      await visit({ page, browser, randomViewCount })
+      await visit({ page, browser, randomViewCount, nickname1, nickname2 })
       return
     }
     const nicknameText = await nickname?.evaluate((el) => el.innerText)
     let viewCountNumber = Number(await viewCount?.evaluate((el) => el.innerText))
 
-    if (nicknameText !== '24시 마루핀' && nicknameText !== '원모어핀') {
+    if (nicknameText !== nickname1 && nicknameText !== nickname2) {
       continue
     }
 
@@ -68,8 +72,8 @@ export const visit = async ({
     }
   }
 
-  log('2분간 대기 합니다..')
+  log('1분간 대기 합니다..')
   await sleep(countInterval)
 
-  await visit({ page, browser, randomViewCount })
+  await visit({ page, browser, randomViewCount, nickname1, nickname2 })
 }

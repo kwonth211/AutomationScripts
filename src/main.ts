@@ -22,10 +22,14 @@ async function runMacro({
   minRange,
   maxRange,
   isBackground,
+  nickname1,
+  nickname2,
 }: {
   minRange: string
   maxRange: string
   isBackground: boolean
+  nickname1: string
+  nickname2: string
 }) {
   const minRangeNumber = parseInt(minRange)
   const maxRangeNumber = parseInt(maxRange)
@@ -49,6 +53,8 @@ async function runMacro({
       page,
       browser,
       randomViewCount,
+      nickname1,
+      nickname2,
     })
   } catch (error) {
     log('매크로 실행 중 오류 발생', error)
@@ -62,8 +68,8 @@ app.on('window-all-closed', () => {
   // if (process.platform !== 'darwin') {
   // }
 })
-ipcMain.on('start-macro', (_, { minRange, maxRange, isBackground }) => {
-  runMacro({ minRange, maxRange, isBackground })
+ipcMain.on('start-macro', (_, { minRange, maxRange, isBackground, nickname1, nickname2 }) => {
+  runMacro({ minRange, maxRange, isBackground, nickname1, nickname2 })
     .then(() => {
       // 매크로 작업이 완료되면 렌더러 프로세스에 알립니다.
       // win.webContents.send('macro-finished');
