@@ -40,6 +40,30 @@ export const createWindow = async () => {
 
   await win.loadFile('./public/index.html')
 
-  log('로그인 실패시 반드시 프로그램을 재 실행해주세요.')
-  log('반드시 touchEn 프로그램이 설치되어 있어야합니다.')
+  log('실제 시,구,동을 정확히 입력해주세요.')
+}
+
+export const generateXlsxFileName = () => {
+  let originDate = new Date()
+
+  let date = ('0' + originDate.getDate()).slice(-2)
+
+  // Current month
+  let month = ('0' + (originDate.getMonth() + 1)).slice(-2)
+
+  // Current year
+  let year = originDate.getFullYear()
+
+  // Current hours
+  let hours = ('0' + originDate.getHours()).slice(-2)
+
+  // Current minutes
+  let minutes = ('0' + originDate.getMinutes()).slice(-2)
+
+  // Current seconds
+  let seconds = ('0' + originDate.getSeconds()).slice(-2)
+
+  // Create a unique file name using the current date and time
+  let filename = `${year}_${month}_${date}_${hours}:${minutes}:${seconds}.xlsx`
+  return filename
 }

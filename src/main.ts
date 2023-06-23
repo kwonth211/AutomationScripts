@@ -1,10 +1,10 @@
 import { app, ipcMain } from 'electron'
 import puppeteer from 'puppeteer-core'
 import path from 'path'
-import { createWindow } from './utils'
+import { createWindow, detectDialog } from './utils'
 import dotenv from 'dotenv'
-import { main } from './domain/cultureLand/main'
 import { log } from './logger'
+import { start } from './domain/real-estate'
 
 app.commandLine.appendSwitch('max-old-space-size', '4096')
 
@@ -21,7 +21,19 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'option2' | 'option3' }) {
+async function runMacro({
+  startYear,
+  endYear,
+  city,
+  gu,
+  dong,
+}: {
+  startYear: string
+  endYear: string
+  city: string
+  gu: string
+  dong: string
+}) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const extensionPath =
@@ -29,7 +41,7 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
 
   let args = ['--start-maximized']
   if (process.platform === 'darwin') {
-    args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
+    // args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
   }
 
   const browser = await puppeteer.launch({
@@ -42,9 +54,11 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
   })
 
   const page = await browser.newPage()
-  await page.setDefaultTimeout(10000)
+  await page.setDefaultTimeout(30000)
   try {
-    await main({ page, selectedOption })
+    // detectDialog({ page })
+
+    await start({ page, startYear, endYear, city, gu, dong })
   } catch (error) {
     log('매크로 실행 중 오류 발생', error)
   }
@@ -58,8 +72,8 @@ app.on('window-all-closed', () => {
   // }
 })
 
-ipcMain.on('start-macro', (_, { selectedOption }) => {
-  runMacro({ selectedOption })
+ipcMain.on('start-macro', (_, { startYear, endYear, city, gu, dong }) => {
+  runMacro({ startYear, endYear, city, gu, dong })
     .then(() => {})
     .catch((error) => {
       log('매크로 실행 중 오류 발생:', error)
