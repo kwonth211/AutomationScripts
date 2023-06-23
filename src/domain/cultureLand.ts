@@ -68,6 +68,9 @@ export const buyGiftCard = async ({
   await page.evaluate(() => {
     ;(window as any).CommBannerClose()
   })
+  await page.evaluate(() => {
+    ;(window as any).setHideADBanner()
+  })
 
   await page.evaluate((company) => {
     const _window = window as any
@@ -100,6 +103,12 @@ export const buyGiftCard = async ({
 
   if (idx === -1) {
     log('매크로 옵션 이상')
+    return
+  }
+  const notBuyTimeElement = await page.$('#alertPop')
+  if (notBuyTimeElement !== null) {
+    // log('구매 가능 시간이 아닙니다.')
+    await buyGiftCard({ page, company, price, count })
     return
   }
 

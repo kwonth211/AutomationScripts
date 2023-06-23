@@ -1,6 +1,6 @@
 {
   "name": "buy-cultureland-pc",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "main": "dist/main.js",
   "repository": "https://github.com/kwonth211/AutomationScripts.git",
   "author": "kwonth211 <kwonth211@naver.com>",
