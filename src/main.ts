@@ -45,8 +45,8 @@ async function runMacro({
   }
 
   const browser = await puppeteer.launch({
-    // headless: 'new',
-    headless: false,
+    headless: 'new',
+    // headless: false,
     defaultViewport: null,
     executablePath: chromePath,
     protocolTimeout: 300000,
@@ -57,7 +57,7 @@ async function runMacro({
   await page.setDefaultTimeout(30000)
   try {
     // detectDialog({ page })
-
+    log('크롤링 시작!')
     await start({ page, startYear, endYear, city, gu, dong })
   } catch (error) {
     log('매크로 실행 중 오류 발생', error)

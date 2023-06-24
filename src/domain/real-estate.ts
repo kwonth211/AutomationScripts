@@ -65,15 +65,13 @@ export const start = async ({
   const wb = xlsx.utils.book_new()
   const header = ['No.', '등록번호', '상호', '소재지', '대표자', '등록일자', '상태']
 
-  // 헤더를 첫 번째 행으로 설정
   let ws = xlsx.utils.aoa_to_sheet([header])
   xlsx.utils.book_append_sheet(wb, ws, 'Data')
   const fileName = generateXlsxFileName()
 
-  // Loop to keep going to next pages
   let tablePage = 1
   while (true) {
-    await sleep(1000)
+    await sleep(2000)
     // 페이지에서 테이블 데이터를 가져옵니다.
     const data = await page.evaluate(() => {
       const tds = Array.from(document.querySelectorAll('.bl_list > tbody > tr') as NodeListOf<HTMLTableRowElement>)

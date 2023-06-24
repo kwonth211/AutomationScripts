@@ -64,6 +64,6 @@ export const generateXlsxFileName = () => {
   let seconds = ('0' + originDate.getSeconds()).slice(-2)
 
   // Create a unique file name using the current date and time
-  let filename = `${year}_${month}_${date}_${hours}:${minutes}:${seconds}.xlsx`
+  let filename = year + '_' + month + '_' + date + '_' + hours + '_' + minutes + '_' + seconds + '.xlsx'
   return filename
 }
