@@ -152,13 +152,12 @@ export const buyGiftCard = async ({
     company,
     price,
   )
-
-  // const alertButtonElement = await page.$('#alertPop > div > div  button')
-  // if (alertButtonElement !== null) {
-  //   await alertButtonElement.click()
-  // }
-
   await page.waitForNavigation()
+
+  const alertButtonElement = await page.$('#alertPop > div > div  button')
+  if (alertButtonElement !== null) {
+    await alertButtonElement.click()
+  }
 
   const buyButtonSelector =
     '#contents > div.contents > div.section.sec-slide > div > div.btn-cont > div > a.btn.primary'
