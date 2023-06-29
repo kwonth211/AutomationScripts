@@ -89,7 +89,6 @@ export const start = async ({
       }
       const year = Number(createdAt.split('.')[0])
       if (year < Number(startYear) || year > Number(endYear)) {
-        log(`${year}년 데이터는 제외합니다.`)
         continue
       }
 
