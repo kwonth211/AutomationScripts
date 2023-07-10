@@ -71,7 +71,7 @@ export const start = async ({
 
   let tablePage = 1
   while (true) {
-    await sleep(2000)
+    await sleep(3000)
     // 페이지에서 테이블 데이터를 가져옵니다.
     let trElements = await page.$$('.bl_list > tbody > tr')
     if (trElements.length === 0) {
@@ -82,6 +82,7 @@ export const start = async ({
 
     for (let i = 0; i < trElements.length; i++) {
       const sangho = await trElements[i].$('td:nth-child(3)')
+
       const $createdAt = await trElements[i].$('td:nth-child(6)')
       const createdAt = await page.evaluate((el) => el?.innerText, $createdAt)
       if (!createdAt) {
@@ -92,9 +93,11 @@ export const start = async ({
         continue
       }
 
-      const linkElement = await sangho?.$('a')
+      //   const linkElement = await sangho?.$('a')
+      const linkElement = await sangho?.$('a:nth-child(2)') // 2번째 `a` 태그를 선택
       if (linkElement) {
         const row = await page.evaluate((el) => el.innerText, trElements[i])
+        // const test = await page.evaluate((el) => el.innerHTML, linkElement)
 
         await linkElement.click()
         await page.waitForNavigation({ waitUntil: 'networkidle0' })
@@ -113,7 +116,6 @@ export const start = async ({
         })
 
         // 돌아가기
-        // await page.goBack()
         await page.evaluate((tablePage) => {
           const _window = window as any
           _window.brokerForm.action = `/lxportal/?menuno=4085&pageIndex=${tablePage}`
@@ -137,7 +139,7 @@ export const start = async ({
     })
 
     // "다음" 버튼이 활성화되어 있지 않다면 클릭하여 다음 페이지로 이동
-    if (!isNextDisabled) {
+    if (!isNextDisabled || trElements.length === 50) {
       await page.evaluate((tablePage) => {
         const _window = window as any
         _window.brokerForm.action = `/lxportal/?menuno=4085&pageIndex=${tablePage}`
