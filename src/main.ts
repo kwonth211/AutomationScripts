@@ -1,11 +1,13 @@
-import { app, BrowserWindow, ipcMain, powerSaveBlocker } from 'electron'
+import { app, ipcMain } from 'electron'
 import puppeteer from 'puppeteer-core'
 import path from 'path'
-import { login } from './login'
-import { detectDialog, sleep } from './utils'
+import { createWindow } from './utils'
 import dotenv from 'dotenv'
-import { visit } from './domain/usedCafe'
-import { authenticateUser, reserve } from './domain/buk-gu-football'
+import { main } from './domain/cultureLand/main'
+import { log } from './logger'
+
+app.commandLine.appendSwitch('max-old-space-size', '4096')
+
 const chromeLauncher = require('chrome-launcher')
 
 const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'
@@ -19,56 +21,33 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-async function runMacro({ isBackground, formData }: { formData: any; isBackground: boolean }) {
+async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'option2' | 'option3' }) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
+  const extensionPath =
+    '/Users/kwontaehoon/Library/Application Support/Google/Chrome/Default/Extensions/dncepekefegjiljlfbihljgogephdhph/1.0.1.15_0'
+
+  let args = ['--start-maximized']
+  if (process.platform === 'darwin') {
+    args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
+  }
+
   const browser = await puppeteer.launch({
+    // headless: 'new',
     headless: false,
     defaultViewport: null,
     executablePath: chromePath,
-    args: ['--start-maximized'],
+    protocolTimeout: 300000,
+    args: args,
   })
 
   const page = await browser.newPage()
-  detectDialog({ page, browser, formData })
-
+  await page.setDefaultTimeout(10000)
   try {
-    await authenticateUser({ page })
-
-    // test용
-    // for (let court of formData.courts) {
-    //   await reserve({ page, browser, formData, court })
-    // }
+    await main({ page, selectedOption })
   } catch (error) {
-    console.error(error)
+    log('매크로 실행 중 오류 발생', error)
   }
-}
-
-ipcMain.on('start-macro', (_, { isBackground, formData }) => {
-  runMacro({ isBackground, formData })
-    .then(() => {
-      // 매크로 작업이 완료되면 렌더러 프로세스에 알립니다.
-      // win.webContents.send('macro-finished');
-    })
-    .catch((error) => {
-      console.error('매크로 실행 중 오류 발생:', error)
-    })
-})
-
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 700,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: true,
-      preload: path.join(__dirname, './preload.js'),
-    },
-  })
-
-  powerSaveBlocker.start('prevent-display-sleep')
-
-  win.loadFile('./public/index.html')
 }
 
 app.whenReady().then(createWindow)
@@ -79,8 +58,10 @@ app.on('window-all-closed', () => {
   // }
 })
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
+ipcMain.on('start-macro', (_, { selectedOption }) => {
+  runMacro({ selectedOption })
+    .then(() => {})
+    .catch((error) => {
+      log('매크로 실행 중 오류 발생:', error)
+    })
 })

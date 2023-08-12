@@ -1,0 +1,21 @@
+appId: com.example.AutomationScripts
+mac:
+  icon: build/icon.icns
+  extraResources:
+    - from: /opt/homebrew/bin/python3
+      to: python3
+extraResources:
+  - from: ./.env
+    to: resources/.env
+win:
+  icon: build/icon.icns
+linux:
+  icon: build/icon.png
+asar: false
+directories:
+  output: buy-cultureland-pc
+  buildResources: build/resources
+files:
+  - dist/**/*
+  - build/**/*
+  - public/**/*

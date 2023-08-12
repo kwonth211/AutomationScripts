@@ -1,5 +1,6 @@
 import puppeteer, { Browser, Page } from 'puppeteer-core'
 import { sleep } from '../utils'
+import { log } from '../logger'
 
 export type ReserveFormData = {
   courts: COURT[]
@@ -114,7 +115,7 @@ export const reserve = async ({
   await page.waitForSelector($submitButtonSelector)
   await page.click($submitButtonSelector)
 
-  console.log(`${court}구장 예약 완료!!`)
+  log(`${court}구장 예약 완료!!`)
   await sleep(5000)
 }
 

@@ -1,6 +1,7 @@
 import { Browser, Page } from 'puppeteer-core'
 import { sleep } from '../utils'
-const countInterval = 5 * 60 * 1000
+import { log } from '../logger'
+const countInterval = 2 * 60 * 1000
 
 export const visit = async ({
   page,
@@ -42,20 +43,16 @@ export const visit = async ({
       throw new Error('alink 없음')
     }
     const nicknameText = await nickname?.evaluate((el) => el.innerText)
-    let viewCountNumber = Number(
-      await viewCount?.evaluate((el) => el.innerText),
-    )
+    let viewCountNumber = Number(await viewCount?.evaluate((el) => el.innerText))
 
     if (nicknameText !== '24시 마루핀' && nicknameText !== '원모어핀') {
       continue
     }
 
     if (viewCountNumber < randomViewCount) {
-      const newPagePromise = new Promise((x) =>
-        browser.once('targetcreated', (target) => x(target.page())),
-      )
-      console.log('클릭됨 \n', titleText)
-      console.log('기존 조회수 \n', viewCountNumber)
+      const newPagePromise = new Promise((x) => browser.once('targetcreated', (target) => x(target.page())))
+      log(`클릭됨 \n ${titleText}`)
+      log(`기존 조회수 \n  ${viewCountNumber}`)
       await alink.click({ button: 'middle' })
       await sleep(2000)
       const newPage = (await newPagePromise) as Page // 새 페이지를 얻음

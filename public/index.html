@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>웃골 풋살장 예약시스템</title>
+    <title>컬쳐랜드 쿠폰구매</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <script src="./../dist/renderer.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
     <style>
       #startMacro {
         margin-top: 15px;
@@ -11,26 +14,27 @@
       .container {
         padding: 20px;
       }
-      #time1,
-      #time2,
-      #time3,
-      #time4,
-      #time5,
-      #time6,
-      #time7,
-      #time8,
-      #time9,
-      #time10,
-      #time11,
-      #time12,
-      #time13,
-      #time14,
-      #time15,
-      #time16 {
-        margin-right: 6px;
-      }
-      .phoneWrapper {
+
+      #log {
         display: flex;
+        flex-direction: column;
+      }
+
+      #log > div {
+        line-height: 20px;
+        height: 20px;
+        text-align: left;
+        padding-left: 10px;
+        font-size: 13px;
+      }
+      .mt-2 {
+        position: absolute;
+        font-size: 12px;
+        margin-top: 0px !important;
+        right: 0px;
+      }
+      h4 {
+        position: relative;
       }
     </style>
   </head>
@@ -39,8 +43,6 @@
       <form id="footballForm">
         <div class="row">
           <div class="col-md-6">
-
-
             <div class="form-group">
               <label>날짜 선택</label>
               <input type="date" required class="form-control form-control-sm" id="date" name="date" />
@@ -48,7 +50,7 @@
 
             <div class="form-group">
               <label>시간 선택</label><br />
-              
+
               <input type="checkbox" name="time4" id="time4" value="9:00 ~ 10:00" /><label for="time4">
                 9:00 ~ 10:00</label
               ><br />
@@ -78,13 +80,9 @@
           </div>
 
           <div class="col-md-6">
-            <div class="form-group">
-             
-            </div>
+            <div class="form-group"></div>
 
-            <div class="form-group">
-        
-            </div>
+            <div class="form-group"></div>
 
             <div class="form-group">
               <label>예약 구분</label>
@@ -93,8 +91,6 @@
               <input type="radio" id="group" name="division" checked value="group" />
               <label for="group">영유아 검진</label>
             </div>
-
-            
 
             <div class="form-group">
               <label> ▶ 증상입력 </label>
@@ -108,12 +104,34 @@
               />
             </div>
 
-          
-
             <button type="submit" class="btn btn-primary">예약하기</button>
           </div>
         </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option2" value="option2" />
+          <label class="form-check-label" for="option2">옵션2 : A회사 30만원 * 33개</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option3" value="option3" />
+          <label class="form-check-label" for="option3">옵션3 : B회사 50만원 * 20개</label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option4" value="option4" />
+          <label class="form-check-label" for="option4">옵션4 : A회사 50만원 * 20개 + B회사 50만원 * 20개</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option5" value="option5" />
+          <label class="form-check-label" for="option5">옵션5 : 롯데 모바일 10만원 * 10개</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4" id="start-macro">매크로 시작</button>
       </form>
+
+      <section class="mt-5">
+        <h4>로그 <button id="clear-button" class="btn btn-secondary mt-2" onclick="">로그 지우기</button></h4>
+        <div id="log" style="height: 200px; overflow: auto; border: 1px solid #ccc"></div>
+      </section>
     </div>
   </body>
 </html>

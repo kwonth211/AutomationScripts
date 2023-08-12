@@ -1,37 +1,45 @@
 import { Browser, Page } from 'puppeteer-core'
-import { ReserveFormData, reserve } from './domain/buk-gu-football'
+import { BrowserWindow, powerSaveBlocker } from 'electron'
+import path from 'path'
+import { log } from './logger'
 
-export const detectDialog = ({
-  page,
-  browser,
-  formData,
-}: {
-  page: Page
-  browser: Browser
-  formData: ReserveFormData
-}) => {
+export const detectDialog = ({ page }: { page: Page }) => {
   page.on('dialog', async (dialog) => {
     console.log(`Dialog message: ${dialog.message()}`)
     await dialog.accept() // 확인 버튼을 누릅니다.
 
     if (dialog.message() === '본인인증에 성공하였습니다.') {
-      try {
-        for (let court of formData.courts) {
-          await reserve({ page, browser, formData, court })
-        }
-      } catch (error) {
-        console.error(error)
-      }
     }
 
     if (dialog.message() === '잘못된 경로로 접근하였습니다.') {
-      for (let court of formData.courts) {
-        await reserve({ page, browser, formData, court })
-      }
     }
+  })
+}
+export const closePopups = ({ page }: { page: Page }) => {
+  page.on('popup', async (popupPage: Page) => {
+    // 새로운 팝업 창이 생성되면 바로 닫음
+    await popupPage.close()
   })
 }
 
 export const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+export const createWindow = async () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 700,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, './preload.js'),
+    },
+  })
+
+  powerSaveBlocker.start('prevent-display-sleep')
+
+  await win.loadFile('./public/index.html')
+
+  log('로그인 실패시 반드시 프로그램을 재 실행해주세요.')
+  log('반드시 touchEn 프로그램이 설치되어 있어야합니다.')
 }
