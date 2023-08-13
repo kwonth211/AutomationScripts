@@ -1,13 +1,11 @@
 import { app, ipcMain } from 'electron'
 import puppeteer from 'puppeteer-core'
 import path from 'path'
-import { createWindow } from './utils'
+import { closePopups, createWindow, sleep } from './utils'
 import dotenv from 'dotenv'
-import { main } from './domain/cultureLand/main'
 import { log } from './logger'
-
 app.commandLine.appendSwitch('max-old-space-size', '4096')
-
+import { MacroFormData, authenticateUser, reserve } from './domain/bro'
 const chromeLauncher = require('chrome-launcher')
 
 const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'
@@ -21,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'option2' | 'option3' }) {
+async function runMacro({ formData }: { formData: MacroFormData }) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const extensionPath =
@@ -44,7 +42,14 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
   const page = await browser.newPage()
   await page.setDefaultTimeout(10000)
   try {
-    await main({ page, selectedOption })
+    await authenticateUser({ page })
+    closePopups({ page })
+    await sleep(500)
+    await reserve({ page, browser, formData })
+    // test용
+    // for (let court of formData.courts) {
+    //
+    // }
   } catch (error) {
     log('매크로 실행 중 오류 발생', error)
   }
@@ -58,8 +63,8 @@ app.on('window-all-closed', () => {
   // }
 })
 
-ipcMain.on('start-macro', (_, { selectedOption }) => {
-  runMacro({ selectedOption })
+ipcMain.on('start-macro', (_, { formData }) => {
+  runMacro({ formData })
     .then(() => {})
     .catch((error) => {
       log('매크로 실행 중 오류 발생:', error)

@@ -1,4 +1,4 @@
-import { Browser, Page } from 'puppeteer-core'
+import { Page } from 'puppeteer-core'
 import { BrowserWindow, powerSaveBlocker } from 'electron'
 import path from 'path'
 import { log } from './logger'
@@ -40,6 +40,6 @@ export const createWindow = async () => {
 
   await win.loadFile('./public/index.html')
 
-  log('로그인 실패시 반드시 프로그램을 재 실행해주세요.')
-  log('반드시 touchEn 프로그램이 설치되어 있어야합니다.')
+  log('항목은 모두 필수 값입니다. 빠짐없이 입력해주세요')
+  log('시간을 복수로 선택할 경우, 빠른 시간 기준으로 예약이 진행됩니다.')
 }

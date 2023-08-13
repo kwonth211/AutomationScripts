@@ -5,19 +5,30 @@ document.addEventListener('DOMContentLoaded', () => {
   if (macroForm) {
     macroForm.addEventListener('submit', (e) => {
       e.preventDefault()
-      let options = document.getElementsByName('options') as NodeListOf<HTMLInputElement>
-
-      let selectedOption
-      for (let i = 0; i < options.length; i++) {
-        if (options[i].checked) {
-          selectedOption = options[i].value
-          break
-        }
+      const form = e.target as HTMLFormElement
+      if (!form) {
+        return
       }
 
-      window?.electron.send('start-macro', {
-        selectedOption,
-      })
+      const formData = {} as any
+
+      // 날짜 선택 값을 가져옴
+      formData.date = form.date.value
+
+      // 시간 선택 체크박스 값을 가져와 배열에 저장
+      const timeSlots = ['time9', 'time10', 'time11', 'time12', 'time13', 'time14', 'time15', 'time16', 'time17']
+      formData.times = timeSlots.reduce((selectedTimes, timeSlotId) => {
+        const checkbox = form[timeSlotId]
+        if (checkbox && checkbox.checked) {
+          selectedTimes.push(checkbox.value)
+        }
+        return selectedTimes
+      }, [] as string[])
+
+      // 증상 입력 값을 가져옴
+      formData.symptom = form.symptom.value
+
+      window?.electron.send('start-macro', { formData })
     })
   }
   if (clearButton) {

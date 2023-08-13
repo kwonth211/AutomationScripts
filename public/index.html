@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>컬쳐랜드 쿠폰구매</title>
+    <title>에버메디 병원예약</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <script src="./../dist/renderer.js"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
     <style>
-      #startMacro {
-        margin-top: 15px;
-      }
       .container {
         padding: 20px;
       }
@@ -36,82 +33,64 @@
       h4 {
         position: relative;
       }
+      /* input type check box 전부에 margin-right */
+      input[type='checkbox'] {
+        margin-right: 10px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <form id="footballForm">
+      <form id="macro-form">
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <label>날짜 선택</label>
               <input type="date" required class="form-control form-control-sm" id="date" name="date" />
             </div>
-
+            <div class="form-group">
+              <label> 증상입력 </label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="symptom"
+                name="symptom"
+                required
+                placeholder="증상을 입력하세요"
+              />
+            </div>
+            <div class="form-group">
+              <button id="start-macro" type="submit" class="btn btn-primary">매크로 시작</button>
+            </div>
+          </div>
+          <div class="col-md-6">
             <div class="form-group">
               <label>시간 선택</label><br />
 
-              <input type="checkbox" name="time4" id="time4" value="9:00 ~ 10:00" /><label for="time4">
-                9:00 ~ 10:00</label
+              <input type="checkbox" name="time9" id="time9" value="9" /><label for="time9"> 9:00 ~ 10:00</label><br />
+              <input type="checkbox" name="time10" id="time10" value="10" /><label for="time10"> 10:00 ~ 11:00</label
               ><br />
-              <input type="checkbox" name="time5" id="time5" value="10:00 ~ 11:00" /><label for="time5">
-                10:00 ~ 11:00</label
+              <input type="checkbox" name="time11" id="time11" value="11" /><label for="time11"> 11:00 ~ 12:00</label
               ><br />
-              <input type="checkbox" name="time6" id="time6" value="11:00 ~ 12:00" /><label for="time6">
-                11:00 ~ 12:00</label
+              <input type="checkbox" name="time12" id="time12" value="12" /><label for="time12"> 12:00 ~ 13:00</label
               ><br />
-              <input type="checkbox" name="time7" id="time7" value="12:00 ~ 13:00" /><label for="time7">
-                12:00 ~ 13:00</label
+              <input type="checkbox" name="time14" id="time14" value="14" /><label for="time14"> 14:00 ~ 15:00</label
               ><br />
-              <input type="checkbox" name="time8" id="time8" value="13:00 ~ 14:00" /><label for="time8">
-                13:00 ~ 14:00</label
+              <input type="checkbox" name="time15" id="time15" value="15" /><label for="time15"> 15:00 ~ 16:00</label
               ><br />
-              <input type="checkbox" name="time9" id="time9" value="14:00 ~ 15:00" /><label for="time9">
-                14:00 ~ 15:00</label
+              <input type="checkbox" name="time16" id="time16" value="16" /><label for="time16"> 16:00 ~ 17:00</label
               ><br />
-              <input type="checkbox" name="time10" id="time10" value="15:00 ~ 16:00" /><label for="time10">
-                15:00 ~ 16:00</label
+              <input type="checkbox" name="time17" id="time17" value="17" /><label for="time17"> 17:00 ~ 18:00</label
               ><br />
-              <input type="checkbox" name="time11" id="time11" value="16:00 ~ 17:00" /><label for="time11">
-                16:00 ~ 17:00</label
+              <input type="checkbox" name="time18" id="time18" value="18" /><label for="time18"> 18:00 ~ 19:00</label
               ><br />
               <br />
             </div>
           </div>
-
-          <div class="col-md-6">
-            <div class="form-group"></div>
-
-            <div class="form-group"></div>
-
-            <div class="form-group">
-              <label>예약 구분</label>
-              <input type="radio" id="individual" name="division" value="individual" />
-              <label for="individual">진료</label>
-              <input type="radio" id="group" name="division" checked value="group" />
-              <label for="group">영유아 검진</label>
-            </div>
-
-            <div class="form-group">
-              <label> ▶ 증상입력 </label>
-              <input
-                required
-                type="text"
-                class="form-control form-control-sm"
-                id="participatingOrganization"
-                name="participatingOrganization"
-                placeholder="증상을 입력하세요"
-              />
-            </div>
-
-            <button type="submit" class="btn btn-primary">예약하기</button>
-          </div>
         </div>
-
-        <button type="submit" class="btn btn-primary mt-4" id="start-macro">매크로 시작</button>
       </form>
 
-      <section class="mt-5">
+      <section>
         <h4>로그 <button id="clear-button" class="btn btn-secondary mt-2" onclick="">로그 지우기</button></h4>
         <div id="log" style="height: 200px; overflow: auto; border: 1px solid #ccc"></div>
       </section>

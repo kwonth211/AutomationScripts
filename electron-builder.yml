@@ -13,7 +13,7 @@ linux:
   icon: build/icon.png
 asar: false
 directories:
-  output: buy-cultureland-pc
+  output: evermedi-automation
   buildResources: build/resources
 files:
   - dist/**/*
