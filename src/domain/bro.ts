@@ -50,9 +50,23 @@ export const reserve = async ({
   if (!frame) {
     throw new Error('frame 없음')
   }
+  // 오늘의 달 가져오기
+  const today = new Date()
+  const year = today.getFullYear()
+  const todayMonth = today.getMonth() + 1
+
+  console.log(todayMonth)
 
   const month = formData.date.split('-')[1]
   const day = formData.date.split('-')[2]
+
+  if (todayMonth < Number(month)) {
+    // 다음달로 이동
+    const $monthSelector = '#month'
+    await frame.waitForSelector($monthSelector)
+    console.log('>>>', String(Number(month) - 1))
+    await frame.select($monthSelector, String(Number(month) - 1))
+  }
   const foundDay = await frame.$$eval(
     'a',
     (anchors, day) => {
