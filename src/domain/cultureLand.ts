@@ -12,7 +12,7 @@ export const login = async ({ page, selectedOption }: { page: Page; selectedOpti
   await page.waitForFunction(
     (selector) => document.querySelector(selector) === null,
     {
-      timeout: 60 * 5 * 1000,
+      timeout: 60 * 5 * 1000 * 5,
     },
     loginFormSelector,
   )
