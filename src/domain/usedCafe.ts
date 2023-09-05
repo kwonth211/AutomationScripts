@@ -3,6 +3,17 @@ import { sleep } from '../utils'
 import { log } from '../logger'
 const countInterval = 2 * 60 * 1000
 
+const loadPage = async ({ page }: { page: Page }) => {
+  try {
+    await page.goto('https://cafe.naver.com/joonggonara', {
+      waitUntil: 'networkidle2',
+    })
+    return true
+  } catch (err) {
+    return false
+  }
+}
+
 export const visit = async ({
   page,
   browser,
@@ -16,9 +27,20 @@ export const visit = async ({
   nickname1: string
   nickname2: string
 }) => {
-  await page.goto('https://cafe.naver.com/joonggonara', {
-    waitUntil: 'networkidle2',
-  })
+  await page.goto('https://www.google.com/search?q=concerts+near+new+york')
+  let isLoaded = false
+  try {
+    isLoaded = await loadPage({ page })
+  } catch (error) {
+    isLoaded = false
+  }
+
+  if (!isLoaded) {
+    log('페이지 로드 실패')
+    await sleep(1000)
+    await visit({ page, browser, randomViewCount, nickname1, nickname2 })
+    return
+  }
 
   await page.waitForSelector('#topLayerQueryInput')
   await page.type('#topLayerQueryInput', '컬쳐랜드')
