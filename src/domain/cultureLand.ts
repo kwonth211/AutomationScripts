@@ -49,6 +49,18 @@ const COMPANY_ID = {
   TRAVEL: 'ktravel',
 }
 
+const loadPage = async ({ page }: { page: Page }) => {
+  try {
+    await page.goto('https://www.cultureland.co.kr/coupon/cpnList.do')
+    return true
+  } catch (error) {
+    console.log(error)
+
+    log('페이지 로드 실패.. 0.5초 후 다시 시도합니다.')
+    return false
+  }
+}
+
 export const buyGiftCard = async ({
   page,
   company,
@@ -64,7 +76,13 @@ export const buyGiftCard = async ({
     log('구매한 갯수가 0이되도 종료되지 않습니다.')
   }
 
-  await page.goto('https://www.cultureland.co.kr/coupon/cpnList.do')
+  const isLoaded = await loadPage({ page })
+  if (!isLoaded) {
+    await sleep(500)
+    await buyGiftCard({ page, company, price, count })
+    return
+  }
+
   await page.evaluate(() => {
     ;(window as any).CommBannerClose()
   })
