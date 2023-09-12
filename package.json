@@ -1,6 +1,6 @@
 {
   "name": "buy-cultureland-pc",
-  "version": "1.1.12",
+  "version": "1.2.0",
   "main": "dist/main.js",
   "repository": "https://github.com/kwonth211/AutomationScripts.git",
   "author": "kwonth211 <kwonth211@naver.com>",
@@ -23,7 +23,7 @@
     "wait-on": "^7.0.1"
   },
   "scripts": {
-    "start": "concurrently \"yarn watch:ts\" \"yarn wait-and-start:electron\"",
+    "dev": "concurrently \"yarn watch:ts\" \"yarn wait-and-start:electron\"",
     "watch:ts": "tsc -w",
     "wait-and-start:electron": "wait-on ./dist/main.js && cross-env NODE_ENV=development yarn start:electron",
     "start:electron": "electron .",

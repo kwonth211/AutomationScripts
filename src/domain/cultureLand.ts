@@ -4,22 +4,7 @@ import { log } from '../logger'
 
 export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'option5'
 
-export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
-  await page.goto('https://www.cultureland.co.kr/signin/login.do')
-  const loginFormSelector = '#loginForm'
-  await page.waitForSelector(loginFormSelector)
-  log('로그인 시작')
-  await page.waitForFunction(
-    (selector) => document.querySelector(selector) === null,
-    {
-      timeout: 60 * 5 * 1000 * 5,
-    },
-    loginFormSelector,
-  )
-
-  log(`선택된 옵션은 ${selectedOption} 입니다.`)
-  await sleep(1000)
-  // 기프트 카드
+const callMenu = async ({ selectedOption, page }: { selectedOption: SelectedOption; page: Page }) => {
   if (selectedOption === 'option1') {
     await buyGiftCard({ page, company: 'A', price: 500000, count: 20 })
   } else if (selectedOption === 'option2') {
@@ -36,7 +21,50 @@ export const login = async ({ page, selectedOption }: { page: Page; selectedOpti
     }
   } else if (selectedOption === 'option5') {
     await buyGiftCard({ page, company: 'LOTTE', price: 100000, count: 10 })
+  } else if (selectedOption === 'option6') {
+    await buyGiftCard({ page, company: 'LOTTE2', price: 500000, count: 20 })
+  } else if (selectedOption === 'option7') {
+    await buyGiftCard({ page, company: 'LOTTE2', price: 100000, count: 20 })
   }
+}
+
+export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
+  await page.goto('https://www.cultureland.co.kr/signin/login.do')
+  const loginFormSelector = '#loginForm'
+  await page.waitForSelector(loginFormSelector)
+  log('로그인 시작')
+
+  try {
+    await page.waitForFunction(
+      (selector) => document.querySelector(selector) === null,
+      {
+        timeout: 60 * 5 * 1000 * 5,
+      },
+      loginFormSelector,
+    )
+  } catch (error) {
+    log('로그인 실패.. 0.5초 후 다시 시도합니다.')
+    await sleep(500)
+    await login({ page, selectedOption })
+  }
+
+  log(`선택된 옵션은 ${selectedOption} 입니다.`)
+  await sleep(1000)
+
+  let i = 0
+  while (i < 5) {
+    try {
+      await callMenu({ selectedOption, page })
+
+      break // callMenu가 성공적으로 실행되면 while 문을 종료
+    } catch (error) {
+      log('알 수없는 에러 발생.. 0.5초 후 다시 시도합니다.')
+      log(error)
+      i++
+      await sleep(500)
+    }
+  }
+  // 기프트 카드
 }
 
 const COMPANY_ID = {
@@ -45,6 +73,7 @@ const COMPANY_ID = {
   TEST: 'ematicon',
   HYUNDAI: 'lhgc',
   LOTTE: 'llgc',
+  LOTTE2: 'lgc',
   SHINSEGAE: 'lsgc',
   TRAVEL: 'ktravel',
 }
@@ -101,12 +130,15 @@ export const buyGiftCard = async ({
       _window.goProdList('현대모바일상품권', 'hgc', '139')
     } else if (company === 'LOTTE') {
       _window.goProdList('(익일발송)롯데모바일상품권', 'lotte', '141')
+    } else if (company === 'LOTTE2') {
+      _window.goProdList('(실시간발송)롯데모바일상품권', 'lgc', '89')
     }
   }, company)
 
   await page.waitForNavigation()
 
   let idx = -1
+  // index는 1부터
   if (company === 'A' && price === 500000) {
     idx = 6
   } else if (company === 'A' && price === 300000) {
@@ -117,6 +149,10 @@ export const buyGiftCard = async ({
     idx = 1
   } else if (company === 'LOTTE' && price === 100000) {
     idx = 1
+  } else if (company === 'LOTTE2' && price === 500000) {
+    idx = 5
+  } else if (company === 'LOTTE2' && price === 100000) {
+    idx = 4
   }
 
   if (idx === -1) {
@@ -165,6 +201,10 @@ export const buyGiftCard = async ({
         _window.goDetail3('1681', 'hgc', '', '0', '0', '0', '0', _window)
       } else if (company === 'LOTTE' && price === 100000) {
         _window.goDetail3('1949', 'lotte', '', '0', '0', '0', '0', _window)
+      } else if (company === 'LOTTE2' && price === 500000) {
+        _window.goDetail3('1527', 'lgc', '', '0', '0', '0', '0', _window)
+      } else if (company === 'LOTTE2' && price === 100000) {
+        _window.goDetail3('1526', 'lgc', '', '0', '0', '0', '0', _window)
       }
     },
     company,
@@ -179,7 +219,6 @@ export const buyGiftCard = async ({
 
   const buyButtonSelector =
     '#contents > div.contents > div.section.sec-slide > div > div.btn-cont > div > a.btn.primary'
-
   await page.waitForSelector(buyButtonSelector)
   await page.click(buyButtonSelector)
 
