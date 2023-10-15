@@ -18,7 +18,7 @@ export const main = async ({ page, selectedOption }: { page: Page; selectedOptio
 
     if (stockText === '(재고수량:0)') {
       log('재고가 없습니다.')
-      sleep(1000)
+      await sleep(3000)
       main({ page, selectedOption })
       return
     }
