@@ -15,15 +15,34 @@ export const main = async ({ page, selectedOption }: { page: Page; selectedOptio
 
     await page.waitForSelector(stockSelector)
     const stockText = await page.$eval(stockSelector, (el) => el.textContent)
-
+    let hasStork = true
     if (stockText === '(재고수량:0)') {
-      log('재고가 없습니다.')
-      await sleep(3000)
-      main({ page, selectedOption })
+      log('롯데모바일상품권 재고가 없습니다.')
+      hasStork = false
+      await sleep(1000)
+    } else {
+      log('롯데모바일상품권 재고가 있습니다.')
+      createPopup()
       return
     }
 
-    createPopup()
+    await page.goto('https://www.happymoney.co.kr/svc/shopping/allianceView.hm?brandId=37')
+    await page.waitForSelector(stockSelector)
+
+    const stockText2 = await page.$eval(stockSelector, (el) => el.textContent)
+    if (stockText2 === '(재고수량:0)') {
+      log('롯데모바일교환권 재고가 없습니다.')
+      hasStork = false
+      await sleep(1000)
+    } else {
+      log('롯데모바일교환권 재고가 있습니다.')
+      createPopup()
+      return
+    }
+
+    log('매크로 차단 방지를 위해 3초간 대기합니다..')
+    await sleep(3000)
+    main({ page, selectedOption })
   } catch (error) {
     log('매크로 실행 중 오류 발생', error)
   }

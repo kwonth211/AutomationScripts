@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import { log } from './logger'
 
 contextBridge.exposeInMainWorld('electron', {
   send: (channel: any, data: any) => {

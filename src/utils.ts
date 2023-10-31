@@ -39,4 +39,6 @@ export const createWindow = async () => {
   powerSaveBlocker.start('prevent-display-sleep')
 
   await win.loadFile('./public/index.html')
+
+  log('스피커 볼륨을 알맞게 조절해주세요.')
 }

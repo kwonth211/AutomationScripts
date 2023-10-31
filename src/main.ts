@@ -64,7 +64,9 @@ app.on('before-quit', () => {
 
 ipcMain.on('start-macro', (_, { selectedOption }) => {
   runMacro({ selectedOption })
-    .then(() => {})
+    .then(() => {
+      log('스피커 볼륨을 알맞게 조절해주세요.')
+    })
     .catch((error) => {
       log('매크로 실행 중 오류 발생:', error)
     })
