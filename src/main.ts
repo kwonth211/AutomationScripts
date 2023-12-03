@@ -1,7 +1,7 @@
 import { app, ipcMain } from 'electron'
 import puppeteer from 'puppeteer-core'
 import path from 'path'
-import { createWindow } from './utils'
+import { createWindow, sleep } from './utils'
 import dotenv from 'dotenv'
 import { main } from './domain/happy-money/main'
 import { log } from './logger'
@@ -46,7 +46,9 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
   try {
     await main({ page, selectedOption })
   } catch (error) {
-    log('매크로 실행 중 오류 발생', error)
+    log('매크로 실행 중 오류 발생.. 다시 시도 합니다.', error)
+    await sleep(500)
+    await main({ page, selectedOption })
   }
 }
 

@@ -44,7 +44,9 @@ export const main = async ({ page, selectedOption }: { page: Page; selectedOptio
     await sleep(3000)
     main({ page, selectedOption })
   } catch (error) {
-    log('매크로 실행 중 오류 발생', error)
+    log('매크로 실행 중 오류 발생.. 0.5초후 다시 시도합니다.', error)
+    await sleep(500)
+    main({ page, selectedOption })
   }
 }
 
