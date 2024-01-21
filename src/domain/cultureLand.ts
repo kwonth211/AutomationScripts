@@ -25,6 +25,8 @@ const callMenu = async ({ selectedOption, page }: { selectedOption: SelectedOpti
     await buyGiftCard({ page, company: 'LOTTE2', price: 500000, count: 20 })
   } else if (selectedOption === 'option7') {
     await buyGiftCard({ page, company: 'LOTTE2', price: 100000, count: 20 })
+  } else if (selectedOption === 'option8') {
+    await buyGiftCard({ page, company: 'STARBUCKS', price: 51500, count: 20 })
   }
 }
 
@@ -76,6 +78,7 @@ const COMPANY_ID = {
   LOTTE2: 'lgc',
   SHINSEGAE: 'lsgc',
   TRAVEL: 'ktravel',
+  STARBUCKS: 'starbucks',
 }
 
 const loadPage = async ({ page }: { page: Page }) => {
@@ -132,6 +135,8 @@ export const buyGiftCard = async ({
       _window.goProdList('(익일발송)롯데모바일상품권', 'lotte', '141')
     } else if (company === 'LOTTE2') {
       _window.goProdList('(실시간발송)롯데모바일상품권', 'lgc', '89')
+    } else if (company === 'STARBUCKS') {
+      _window.goProdList('스타벅스 e카드 교환권', 'star', '174')
     }
   }, company)
 
@@ -153,6 +158,8 @@ export const buyGiftCard = async ({
     idx = 5
   } else if (company === 'LOTTE2' && price === 100000) {
     idx = 4
+  } else if (company === 'STARBUCKS' && price === 51500) {
+    idx = 3
   }
 
   if (idx === -1) {
@@ -206,6 +213,10 @@ export const buyGiftCard = async ({
       } else if (company === 'LOTTE2' && price === 100000) {
         _window.goDetail3('1526', 'lgc', '', '0', '0', '0', '0', _window)
       }
+      // 5. company가 STARBUCKS이고 가격이 51500원일때
+      else if (company === 'STARBUCKS' && price === 51500) {
+        _window.goDetail3('2426', 'star', '', '0', '0', '0', '0', _window)
+      }
     },
     company,
     price,
@@ -222,8 +233,8 @@ export const buyGiftCard = async ({
   await page.waitForSelector(buyButtonSelector)
   await page.click(buyButtonSelector)
 
-  // await sleep(300)
-
+  await page.waitForNavigation()
+  await sleep(300)
   // 동의 버튼
   const agreeButtonSelector = '#agreement-pop-00'
   await page.waitForSelector(agreeButtonSelector)
@@ -250,6 +261,26 @@ export const buyGiftCard = async ({
         const alertButtonElement = await page.$('#alertPop > div > div > div > div > button')
         if (alertButtonElement !== null) {
           await alertButtonElement.click()
+
+          //동의버튼 1의 값을 가져와서 true가 아닐경우
+          const isAgreeButtonSelected = await page.evaluate((selector) => {
+            const element = document.querySelector(selector) as HTMLInputElement
+            return element && element.checked
+          }, agreeButtonSelector)
+
+          if (!isAgreeButtonSelected) {
+            await page.click(agreeButtonSelector)
+          }
+
+          //동의버튼 2의 값을 가져와서 true가 아닐경우
+          const isAgreeButton2Selected = await page.evaluate((selector) => {
+            const element = document.querySelector(selector) as HTMLInputElement
+            return element && element.checked
+          }, agreeButtonSelector2)
+
+          if (!isAgreeButton2Selected) {
+            await page.click(agreeButtonSelector2)
+          }
         }
       } else {
         break
