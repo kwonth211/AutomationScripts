@@ -233,7 +233,6 @@ export const buyGiftCard = async ({
   await page.waitForSelector(buyButtonSelector)
   await page.click(buyButtonSelector)
 
-  await page.waitForNavigation()
   await sleep(300)
   // 동의 버튼
   const agreeButtonSelector = '#agreement-pop-00'
