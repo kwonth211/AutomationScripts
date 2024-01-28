@@ -14,12 +14,18 @@ export const detectDialog = ({
     console.log(`Dialog message: ${dialog.message()}`)
     await dialog.accept() // 확인 버튼을 누릅니다.
 
+    let currentCourt = null
     if (dialog.message() === '본인인증에 성공하였습니다.') {
       try {
         for (let court of formData.courts) {
+          currentCourt = court
           await reserve({ page, browser, formData, court })
         }
       } catch (error) {
+        console.log('예약 중 오류 발생 다시 시도합니다..')
+        if (currentCourt) {
+          await reserve({ page, browser, formData, court: currentCourt })
+        }
         console.error(error)
       }
     }

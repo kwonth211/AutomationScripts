@@ -5,7 +5,7 @@ import { login } from './login'
 import { detectDialog, sleep } from './utils'
 import dotenv from 'dotenv'
 import { visit } from './domain/usedCafe'
-import { authenticateUser, reserve } from './domain/buk-gu-football'
+import { authenticateUser } from './domain/buk-gu-football'
 const chromeLauncher = require('chrome-launcher')
 
 const resourcesPath = app.isPackaged ? path.join(process.resourcesPath, 'resources') : '.'
