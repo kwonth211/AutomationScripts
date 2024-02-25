@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 import { main } from './domain/cultureLand/main'
 import { log } from './logger'
 
-app.commandLine.appendSwitch('max-old-space-size', '4096')
+app.commandLine.appendSwitch('max-old-space-size', '8192')
 
 const chromeLauncher = require('chrome-launcher')
 

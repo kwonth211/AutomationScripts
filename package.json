@@ -26,7 +26,7 @@
     "dev": "concurrently \"yarn watch:ts\" \"yarn wait-and-start:electron\"",
     "watch:ts": "tsc -w",
     "wait-and-start:electron": "wait-on ./dist/main.js && cross-env NODE_ENV=development yarn start:electron",
-    "start:electron": "electron .",
+    "start:electron": "electron --js-flags=\"--expose-gc\" .",
     "build": "tsc && electron-builder",
     "build:mac": "tsc && electron-builder --mac",
     "build:win": "tsc && electron-builder --win --x64",
