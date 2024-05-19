@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>해피머니 재고 체크</title>
+    <title>스타비즈 재고 알림</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <script src="./../dist/renderer.js"></script>
@@ -40,6 +40,15 @@
   <body>
     <div class="container mt-5">
       <form id="macro-form">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option1" value="option1" checked />
+          <label class="form-check-label" for="option1">옵션 1: 신세계상품권 재고 확인</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="options" id="option2" value="option2" />
+          <label class="form-check-label" for="option2">옵션 2: 롯데상품권 재고 확인</label>
+        </div>
+
         <button type="submit" class="btn btn-primary mt-4" id="start-macro">매크로 시작</button>
       </form>
 

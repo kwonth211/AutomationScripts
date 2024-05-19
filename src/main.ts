@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer-core'
 import path from 'path'
 import { createWindow, sleep } from './utils'
 import dotenv from 'dotenv'
-import { main } from './domain/happy-money/main'
+import { main } from './domain/star-biz/main'
 import { log } from './logger'
 
 app.commandLine.appendSwitch('max-old-space-size', '4096')
