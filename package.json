@@ -1,6 +1,6 @@
 {
-  "name": "build-happy-money",
-  "version": "1.2.2",
+  "name": "star-biz",
+  "version": "1.0.0",
   "main": "dist/main.js",
   "repository": "https://github.com/kwonth211/AutomationScripts.git",
   "author": "kwonth211 <kwonth211@naver.com>",
