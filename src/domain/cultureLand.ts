@@ -280,6 +280,12 @@ export const buyGiftCard = async ({
         break
       }
     }
+
+    // 페이지 url이 결제완료 페이지인지 확인 url = https://www.cultureland.co.kr/coupon/cpnOrderEnd.do
+    await page.evaluate(() => {
+      return location.href === 'https://www.cultureland.co.kr/coupon/cpnOrderEnd.do'
+    })
+
     log('구매 완료!!')
 
     // await buyGiftCard({ page, company, price, count: count - 1 })
