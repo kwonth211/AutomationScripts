@@ -9,13 +9,15 @@ const url = {
   option2: 'https://www.happymoney.co.kr/svc/shopping/allianceView.hm?brandId=66',
   option3: 'https://www.happymoney.co.kr/svc/shopping/allianceView.hm?brandId=63',
   option4: 'https://www.happymoney.co.kr/svc/shopping/allianceView.hm?brandId=38',
+  option6: 'https://www.happymoney.co.kr/svc/shopping/allianceView.hm?brandId=180',
 }
 const name = {
   option1: '신세계지류상품권',
   option2: '현대지류상품권',
   option3: '롯데지류상품권',
-  option4: '신세계모바일상품권',
+  option4: '신세계상품권모바일교환권',
   option5: '롯데모바일상품권',
+  option6: '신세계모바일상품권',
 }
 
 export const main = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {

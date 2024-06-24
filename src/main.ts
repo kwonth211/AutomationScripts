@@ -29,7 +29,7 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
 
   let args = ['--start-maximized']
   if (process.platform === 'darwin') {
-    args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
+    // args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
   }
 
   const browser = await puppeteer.launch({
@@ -38,7 +38,7 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
     defaultViewport: null,
     executablePath: chromePath,
     protocolTimeout: 300000,
-    args: args,
+    // args: args,
   })
 
   const page = await browser.newPage()
