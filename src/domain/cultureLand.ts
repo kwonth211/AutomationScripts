@@ -4,33 +4,68 @@ import { log } from '../logger'
 
 export type SelectedOption = 'option1' | 'option2' | 'option3' | 'option4' | 'option5'
 
-const callMenu = async ({ selectedOption, page }: { selectedOption: SelectedOption; page: Page }) => {
+const callMenu = async ({
+  selectedOption,
+  page,
+  phonePart1,
+  phonePart2,
+  phonePart3,
+}: {
+  selectedOption: SelectedOption
+  page: Page
+  phonePart1: string
+  phonePart2: string
+  phonePart3: string
+}) => {
+  // 테스트용
+  // await buyGiftCard({
+  //   page,
+  //   company: 'HYUNDAI',
+  //   price: 100000,
+  //   count: 20,
+  //   phonePart1,
+  //   phonePart2,
+  //   phonePart3,
+  // })
+
   if (selectedOption === 'option1') {
-    await buyGiftCard({ page, company: 'A', price: 500000, count: 20 })
+    await buyGiftCard({ page, company: 'A', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option2') {
-    await buyGiftCard({ page, company: 'A', price: 300000, count: 33 })
+    await buyGiftCard({ page, company: 'A', price: 300000, count: 33, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option3') {
-    await buyGiftCard({ page, company: 'B', price: 500000, count: 20 })
+    await buyGiftCard({ page, company: 'B', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option4') {
     for (let i = 0; i < 2; i++) {
       if (i === 0) {
-        await buyGiftCard({ page, company: 'A', price: 500000, count: 20 })
+        await buyGiftCard({ page, company: 'A', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
       } else {
-        await buyGiftCard({ page, company: 'B', price: 500000, count: 20 })
+        await buyGiftCard({ page, company: 'B', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
       }
     }
   } else if (selectedOption === 'option5') {
-    await buyGiftCard({ page, company: 'LOTTE', price: 100000, count: 10 })
+    await buyGiftCard({ page, company: 'LOTTE', price: 100000, count: 10, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option6') {
-    await buyGiftCard({ page, company: 'LOTTE2', price: 500000, count: 20 })
+    await buyGiftCard({ page, company: 'LOTTE2', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option7') {
-    await buyGiftCard({ page, company: 'LOTTE2', price: 100000, count: 20 })
+    await buyGiftCard({ page, company: 'LOTTE2', price: 100000, count: 20, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option8') {
-    await buyGiftCard({ page, company: 'STARBUCKS', price: 51500, count: 20 })
+    await buyGiftCard({ page, company: 'STARBUCKS', price: 51500, count: 20, phonePart1, phonePart2, phonePart3 })
   }
 }
 
-export const login = async ({ page, selectedOption }: { page: Page; selectedOption: SelectedOption }) => {
+export const login = async ({
+  page,
+  selectedOption,
+  phonePart1,
+  phonePart2,
+  phonePart3,
+}: {
+  page: Page
+  selectedOption: SelectedOption
+  phonePart1: string
+  phonePart2: string
+  phonePart3: string
+}) => {
   await page.goto('https://www.cultureland.co.kr/signin/login.do')
   const loginFormSelector = '#loginForm'
   await page.waitForSelector(loginFormSelector)
@@ -47,7 +82,7 @@ export const login = async ({ page, selectedOption }: { page: Page; selectedOpti
   } catch (error) {
     log('로그인 실패.. 0.5초 후 다시 시도합니다.')
     await sleep(500)
-    await login({ page, selectedOption })
+    await login({ page, selectedOption, phonePart1, phonePart2, phonePart3 })
   }
 
   log(`선택된 옵션은 ${selectedOption} 입니다.`)
@@ -56,7 +91,7 @@ export const login = async ({ page, selectedOption }: { page: Page; selectedOpti
   let i = 0
   while (i < 5) {
     try {
-      await callMenu({ selectedOption, page })
+      await callMenu({ selectedOption, page, phonePart1, phonePart2, phonePart3 })
 
       break // callMenu가 성공적으로 실행되면 while 문을 종료
     } catch (error) {
@@ -98,11 +133,17 @@ export const buyGiftCard = async ({
   company,
   price,
   count,
+  phonePart1,
+  phonePart2,
+  phonePart3,
 }: {
   page: Page
   company: keyof typeof COMPANY_ID
   price: number
   count: number // 20 or 33
+  phonePart1: string
+  phonePart2: string
+  phonePart3: string
 }) => {
   while (true) {
     const isLoaded = await loadPage({ page })
@@ -227,6 +268,20 @@ export const buyGiftCard = async ({
     await page.click(buyButtonSelector)
 
     await sleep(300)
+    // 직접입력 버튼
+    const directInputButtonSelector = '#radio-02'
+    await page.waitForSelector(directInputButtonSelector)
+    await page.click(directInputButtonSelector)
+
+    // 휴대폰번호 입력
+    const phoneInputSelector1 = '#hp_no1'
+    const phoneInputSelector2 = '#hp_no2'
+    const phoneInputSelector3 = '#hp_no3'
+
+    await page.type(phoneInputSelector1, phonePart1)
+    await page.type(phoneInputSelector2, phonePart2)
+    await page.type(phoneInputSelector3, phonePart3)
+
     // 동의 버튼
     const agreeButtonSelector = '#agreement-pop-00'
     await page.waitForSelector(agreeButtonSelector)

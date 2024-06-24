@@ -75,7 +75,22 @@
           <label class="form-check-label" for="option8">옵션8 : 스타벅스 e카드 5만원</label>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-4" id="start-macro">매크로 시작</button>
+        <div class="form-group">
+          <label for="phone-number">입력할 휴대폰 번호</label>
+          <div class="form-row">
+            <div class="col">
+              <input type="text" class="form-control" id="phone-part1" maxlength="3" value="010" />
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" id="phone-part2" maxlength="4" />
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" id="phone-part3" maxlength="4" />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4" id="start-macro" disabled>매크로 시작</button>
       </form>
 
       <section class="mt-5">
@@ -83,5 +98,25 @@
         <div id="log" style="height: 200px; overflow: auto; border: 1px solid #ccc"></div>
       </section>
     </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const phonePart1 = document.getElementById('phone-part1')
+        const phonePart2 = document.getElementById('phone-part2')
+        const phonePart3 = document.getElementById('phone-part3')
+        const startMacroButton = document.getElementById('start-macro')
+
+        function validatePhoneNumber() {
+          if (phonePart1.value.length === 3 && phonePart2.value.length === 4 && phonePart3.value.length === 4) {
+            startMacroButton.disabled = false
+          } else {
+            startMacroButton.disabled = true
+          }
+        }
+
+        phonePart1.addEventListener('input', validatePhoneNumber)
+        phonePart2.addEventListener('input', validatePhoneNumber)
+        phonePart3.addEventListener('input', validatePhoneNumber)
+      })
+    </script>
   </body>
 </html>

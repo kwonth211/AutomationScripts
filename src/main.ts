@@ -21,11 +21,21 @@ if (process.env.NODE_ENV === 'development') {
   })
 }
 
-async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'option2' | 'option3' }) {
+async function runMacro({
+  selectedOption,
+  phonePart1,
+  phonePart2,
+  phonePart3,
+}: {
+  selectedOption: 'option1' | 'option2' | 'option3'
+  phonePart1: string
+  phonePart2: string
+  phonePart3: string
+}) {
   const chromePath = await chromeLauncher.Launcher.getFirstInstallation()
 
   const extensionPath =
-    '/Users/kwontaehoon/Library/Application Support/Google/Chrome/Default/Extensions/dncepekefegjiljlfbihljgogephdhph/1.0.1.15_0'
+    '/Users/kwontaehoon/Library/Application Support/Google/Chrome/Default/Extensions/dncepekefegjiljlfbihljgogephdhph/1.0.2.4_0'
 
   let args = ['--start-maximized']
   if (process.platform === 'darwin') {
@@ -44,7 +54,7 @@ async function runMacro({ selectedOption }: { selectedOption: 'option1' | 'optio
   const page = await browser.newPage()
   await page.setDefaultTimeout(10000)
   try {
-    await main({ page, selectedOption })
+    await main({ page, selectedOption, phonePart1, phonePart2, phonePart3 })
   } catch (error) {
     log('매크로 실행 중 오류 발생', error)
   }
@@ -58,8 +68,8 @@ app.on('window-all-closed', () => {
   // }
 })
 
-ipcMain.on('start-macro', (_, { selectedOption }) => {
-  runMacro({ selectedOption })
+ipcMain.on('start-macro', (_, { selectedOption, phonePart1, phonePart2, phonePart3 }) => {
+  runMacro({ selectedOption, phonePart1, phonePart2, phonePart3 })
     .then(() => {})
     .catch((error) => {
       log('매크로 실행 중 오류 발생:', error)

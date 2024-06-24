@@ -15,8 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      const phonePart1 = (document.getElementById('phone-part1') as HTMLInputElement).value
+      const phonePart2 = (document.getElementById('phone-part2') as HTMLInputElement).value
+      const phonePart3 = (document.getElementById('phone-part3') as HTMLInputElement).value
+
       window?.electron.send('start-macro', {
         selectedOption,
+        phonePart1,
+        phonePart2,
+        phonePart3,
       })
     })
   }
