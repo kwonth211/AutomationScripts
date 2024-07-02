@@ -29,27 +29,37 @@ const callMenu = async ({
   // })
 
   if (selectedOption === 'option1') {
-    await buyGiftCard({ page, company: 'A', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
+    await buyGiftCard({ page, company: 'A', price: 500000, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option2') {
-    await buyGiftCard({ page, company: 'A', price: 300000, count: 33, phonePart1, phonePart2, phonePart3 })
+    await buyGiftCard({ page, company: 'A', price: 300000, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option3') {
-    await buyGiftCard({ page, company: 'B', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
+    await buyGiftCard({ page, company: 'B', price: 500000, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option4') {
     for (let i = 0; i < 2; i++) {
       if (i === 0) {
-        await buyGiftCard({ page, company: 'A', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
+        await buyGiftCard({ page, company: 'A', price: 500000, phonePart1, phonePart2, phonePart3 })
       } else {
-        await buyGiftCard({ page, company: 'B', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
+        await buyGiftCard({ page, company: 'B', price: 500000, phonePart1, phonePart2, phonePart3 })
       }
     }
   } else if (selectedOption === 'option5') {
-    await buyGiftCard({ page, company: 'LOTTE', price: 100000, count: 10, phonePart1, phonePart2, phonePart3 })
+    await buyGiftCard({ page, company: 'LOTTE', price: 100000, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option6') {
-    await buyGiftCard({ page, company: 'LOTTE2', price: 500000, count: 20, phonePart1, phonePart2, phonePart3 })
+    await buyGiftCard({ page, company: 'LOTTE2', price: 500000, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option7') {
-    await buyGiftCard({ page, company: 'LOTTE2', price: 100000, count: 20, phonePart1, phonePart2, phonePart3 })
+    await buyGiftCard({ page, company: 'LOTTE2', price: 100000, phonePart1, phonePart2, phonePart3 })
   } else if (selectedOption === 'option8') {
-    await buyGiftCard({ page, company: 'STARBUCKS', price: 51500, count: 20, phonePart1, phonePart2, phonePart3 })
+    await buyGiftCard({ page, company: 'STARBUCKS', price: 51500, phonePart1, phonePart2, phonePart3 })
+  } else if (selectedOption === 'option9') {
+    await buyGiftCard({ page, company: 'LOTTE_JILYU', phonePart1, phonePart2, phonePart3 })
+  } else if (selectedOption === 'option10') {
+    await buyGiftCard({
+      page,
+      company: 'SHINSEAGE_JILYU',
+      phonePart1,
+      phonePart2,
+      phonePart3,
+    })
   }
 }
 
@@ -114,6 +124,8 @@ const COMPANY_ID = {
   SHINSEGAE: 'lsgc',
   TRAVEL: 'ktravel',
   STARBUCKS: 'starbucks',
+  LOTTE_JILYU: 'llgc',
+  SHINSEAGE_JILYU: 'lsgc',
 }
 
 const loadPage = async ({ page }: { page: Page }) => {
@@ -132,15 +144,13 @@ export const buyGiftCard = async ({
   page,
   company,
   price,
-  count,
   phonePart1,
   phonePart2,
   phonePart3,
 }: {
   page: Page
   company: keyof typeof COMPANY_ID
-  price: number
-  count: number // 20 or 33
+  price?: number
   phonePart1: string
   phonePart2: string
   phonePart3: string
@@ -174,6 +184,10 @@ export const buyGiftCard = async ({
         _window.goProdList('(실시간발송)롯데모바일상품권', 'lgc', '89')
       } else if (company === 'STARBUCKS') {
         _window.goProdList('스타벅스 e카드 교환권', 'star', '174')
+      } else if (company === 'LOTTE_JILYU') {
+        _window.goProdList('롯데지류상품권(배송상품)', 'llgc', '128')
+      } else if (company === 'SHINSEAGE_JILYU') {
+        _window.goProdList('신세계지류상품권(배송상품)', 'lsgc', '129')
       }
     }, company)
 
@@ -197,6 +211,10 @@ export const buyGiftCard = async ({
       idx = 4
     } else if (company === 'STARBUCKS' && price === 51500) {
       idx = 3
+    } else if (company === 'LOTTE_JILYU') {
+      idx = 1
+    } else if (company === 'SHINSEAGE_JILYU') {
+      idx = 1
     }
 
     if (idx === -1) {
