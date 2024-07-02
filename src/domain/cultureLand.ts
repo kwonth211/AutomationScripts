@@ -286,19 +286,21 @@ export const buyGiftCard = async ({
     await page.click(buyButtonSelector)
 
     await sleep(300)
+
+    // 속도이슈로 인해 주석 처리
     // 직접입력 버튼
-    const directInputButtonSelector = '#radio-02'
-    await page.waitForSelector(directInputButtonSelector)
-    await page.click(directInputButtonSelector)
+    // const directInputButtonSelector = '#radio-02'
+    // await page.waitForSelector(directInputButtonSelector)
+    // await page.click(directInputButtonSelector)
 
-    // 휴대폰번호 입력
-    const phoneInputSelector1 = '#hp_no1'
-    const phoneInputSelector2 = '#hp_no2'
-    const phoneInputSelector3 = '#hp_no3'
+    // // 휴대폰번호 입력
+    // const phoneInputSelector1 = '#hp_no1'
+    // const phoneInputSelector2 = '#hp_no2'
+    // const phoneInputSelector3 = '#hp_no3'
 
-    await page.type(phoneInputSelector1, phonePart1)
-    await page.type(phoneInputSelector2, phonePart2)
-    await page.type(phoneInputSelector3, phonePart3)
+    // await page.type(phoneInputSelector1, phonePart1)
+    // await page.type(phoneInputSelector2, phonePart2)
+    // await page.type(phoneInputSelector3, phonePart3)
 
     // 동의 버튼
     const agreeButtonSelector = '#agreement-pop-00'
