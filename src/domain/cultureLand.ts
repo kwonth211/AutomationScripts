@@ -269,6 +269,10 @@ export const buyGiftCard = async ({
         // 5. company가 STARBUCKS이고 가격이 51500원일때
         else if (company === 'STARBUCKS' && price === 51500) {
           _window.goDetail3('2426', 'star', '', '0', '0', '0', '0', _window)
+        } else if (company === 'LOTTE_JILYU') {
+          _window.goDetail3('1522', 'llgc', '', '0', '0', '0', '0', _window)
+        } else if (company === 'SHINSEAGE_JILYU') {
+          _window.goDetail3('1521', 'lsgc', '', '0', '0', '0', '0', _window)
         }
       },
       company,
