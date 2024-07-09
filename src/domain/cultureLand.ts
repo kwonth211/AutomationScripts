@@ -158,17 +158,15 @@ export const buyGiftCard = async ({
   while (true) {
     const isLoaded = await loadPage({ page })
     if (!isLoaded) {
-      await sleep(500)
-      // await buyGiftCard({ page, company, price, count })
+      await sleep(100)
       continue
     }
 
     await page.evaluate(() => {
       ;(window as any).CommBannerClose()
-    })
-    await page.evaluate(() => {
       ;(window as any).setHideADBanner()
     })
+
     await page.evaluate((company) => {
       const _window = window as any
 
@@ -235,7 +233,6 @@ export const buyGiftCard = async ({
       if (global.gc) {
         global.gc()
       } else {
-        log('gc is not defined')
       }
       await page.reload()
       await sleep(200)
@@ -308,8 +305,10 @@ export const buyGiftCard = async ({
 
     // 동의 버튼
     const agreeButtonSelector = '#agreement-pop-00'
-    await page.waitForSelector(agreeButtonSelector)
-    await page.click(agreeButtonSelector)
+    if (!company.includes('JILYU')) {
+      await page.waitForSelector(agreeButtonSelector)
+      await page.click(agreeButtonSelector)
+    }
 
     // 동의 버튼2
     const agreeButtonSelector2 = '#agreement-pop-01'
@@ -333,13 +332,15 @@ export const buyGiftCard = async ({
             await alertButtonElement.click()
 
             //동의버튼 1의 값을 가져와서 true가 아닐경우
-            const isAgreeButtonSelected = await page.evaluate((selector) => {
-              const element = document.querySelector(selector) as HTMLInputElement
-              return element && element.checked
-            }, agreeButtonSelector)
+            if (!company.includes('JILYU')) {
+              const isAgreeButtonSelected = await page.evaluate((selector) => {
+                const element = document.querySelector(selector) as HTMLInputElement
+                return element && element.checked
+              }, agreeButtonSelector)
 
-            if (!isAgreeButtonSelected) {
-              await page.click(agreeButtonSelector)
+              if (!isAgreeButtonSelected) {
+                await page.click(agreeButtonSelector)
+              }
             }
 
             //동의버튼 2의 값을 가져와서 true가 아닐경우
