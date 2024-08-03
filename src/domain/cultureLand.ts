@@ -60,6 +60,8 @@ const callMenu = async ({
       phonePart2,
       phonePart3,
     })
+  } else if (selectedOption === 'option11') {
+    await buyGiftCard({ page, company: 'TNCASH', price: 50000, phonePart1, phonePart2, phonePart3 })
   }
 }
 
@@ -126,6 +128,7 @@ const COMPANY_ID = {
   STARBUCKS: 'starbucks',
   LOTTE_JILYU: 'llgc',
   SHINSEAGE_JILYU: 'lsgc',
+  TNCASH: 'tncash',
 }
 
 const loadPage = async ({ page }: { page: Page }) => {
@@ -186,6 +189,8 @@ export const buyGiftCard = async ({
         _window.goProdList('롯데지류상품권(배송상품)', 'llgc', '128')
       } else if (company === 'SHINSEAGE_JILYU') {
         _window.goProdList('신세계지류상품권(배송상품)', 'lsgc', '129')
+      } else if (company === 'TNCASH') {
+        _window.goProdList('틴캐시모바일상품권', 'tncash', '171')
       }
     }, company)
 
@@ -213,6 +218,8 @@ export const buyGiftCard = async ({
       idx = 1
     } else if (company === 'SHINSEAGE_JILYU') {
       idx = 1
+    } else if (company === 'TNCASH' && price === 50000) {
+      idx = 5
     }
 
     if (idx === -1) {
@@ -270,6 +277,8 @@ export const buyGiftCard = async ({
           _window.goDetail3('1522', 'llgc', '', '0', '0', '0', '0', _window)
         } else if (company === 'SHINSEAGE_JILYU') {
           _window.goDetail3('1521', 'lsgc', '', '0', '0', '0', '0', _window)
+        } else if (company === 'TNCASH' && price === 50000) {
+          _window.goDetail3('2404', 'tncash', '', '0', '0', '0', '0', _window)
         }
       },
       company,
@@ -281,6 +290,14 @@ export const buyGiftCard = async ({
     if (alertButtonElement !== null) {
       await alertButtonElement.click()
     }
+
+    const inputQuantitySelector = '#qty'
+
+    if (company === 'TNCASH') {
+      await page.waitForSelector(inputQuantitySelector)
+      await page.type(inputQuantitySelector, '20')
+    }
+
     const buyButtonSelector =
       '#contents > div.contents > div.section.sec-slide > div > div.btn-cont > div > a.btn.primary'
     await page.waitForSelector(buyButtonSelector)
@@ -305,7 +322,7 @@ export const buyGiftCard = async ({
 
     // 동의 버튼
     const agreeButtonSelector = '#agreement-pop-00'
-    if (!company.includes('JILYU')) {
+    if (HasFirstAgreement(company)) {
       await page.waitForSelector(agreeButtonSelector)
       await page.click(agreeButtonSelector)
     }
@@ -331,8 +348,8 @@ export const buyGiftCard = async ({
           if (alertButtonElement !== null) {
             await alertButtonElement.click()
 
-            //동의버튼 1의 값을 가져와서 true가 아닐경우
-            if (!company.includes('JILYU')) {
+            if (HasFirstAgreement(company)) {
+              //동의버튼 1의 값을 가져와서 true가 아닐경우
               const isAgreeButtonSelected = await page.evaluate((selector) => {
                 const element = document.querySelector(selector) as HTMLInputElement
                 return element && element.checked
@@ -370,4 +387,8 @@ export const buyGiftCard = async ({
 
     // await buyGiftCard({ page, company, price, count: count - 1 })
   }
+}
+
+const HasFirstAgreement = (company: keyof typeof COMPANY_ID) => {
+  return !(company === 'LOTTE_JILYU' || company === 'SHINSEAGE_JILYU' || company === 'TNCASH')
 }
