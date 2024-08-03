@@ -27,7 +27,7 @@ async function runMacro({ formData }: { formData: MacroFormData }) {
 
   let args = ['--start-maximized']
   if (process.platform === 'darwin') {
-    args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
+    // args.push(`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`)
   }
 
   const browser = await puppeteer.launch({
@@ -51,7 +51,8 @@ async function runMacro({ formData }: { formData: MacroFormData }) {
     //
     // }
   } catch (error) {
-    log('매크로 실행 중 오류 발생', error)
+    log('매크로 실행 중 오류 발생 다시 시도합니다..', error)
+    await reserve({ page, browser, formData })
   }
 }
 
