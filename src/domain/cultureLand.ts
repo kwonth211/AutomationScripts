@@ -294,8 +294,12 @@ export const buyGiftCard = async ({
     const inputQuantitySelector = '#qty'
 
     if (company === 'TNCASH') {
-      await page.waitForSelector(inputQuantitySelector)
-      await page.type(inputQuantitySelector, '20')
+      await page.evaluate(() => {
+        const input = document.querySelector('#qty') as HTMLInputElement
+        if (input) {
+          input.value = '20'
+        }
+      })
     }
 
     const buyButtonSelector =
