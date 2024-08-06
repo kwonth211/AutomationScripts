@@ -296,9 +296,12 @@ export const buyGiftCard = async ({
     if (company === 'TNCASH') {
       await page.evaluate(() => {
         const input = document.querySelector('#qty') as HTMLInputElement
+        const _window = window as any
+
         if (input) {
           input.value = '20'
         }
+        _window.quantityControll(_window)
       })
     }
 
@@ -308,6 +311,13 @@ export const buyGiftCard = async ({
     await page.click(buyButtonSelector)
 
     await sleep(300)
+
+    // 임시 팝업
+    const alertButtonElement2 = await page.$('#alertPop > div > div  button')
+    if (alertButtonElement2 !== null) {
+      await alertButtonElement2.click()
+      continue
+    }
 
     // 속도이슈로 인해 주석 처리
     // 직접입력 버튼
