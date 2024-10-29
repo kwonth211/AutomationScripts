@@ -341,6 +341,10 @@ export const buyGiftCard = async ({
       await page.click(agreeButtonSelector)
     }
 
+    if (company === 'SHINSEAGE_JILYU') {
+      await page.waitForSelector('#delivery_agree')
+      await page.click('#delivery_agree')
+    }
     // 동의 버튼2
     const agreeButtonSelector2 = '#agreement-pop-01'
     await page.waitForSelector(agreeButtonSelector2)
