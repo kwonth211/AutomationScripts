@@ -305,6 +305,18 @@ export const buyGiftCard = async ({
       })
     }
 
+    if (company === 'SHINSEAGE_JILYU') {
+      await page.evaluate(() => {
+        const input = document.querySelector('#qty') as HTMLInputElement
+        const _window = window as any
+
+        if (input) {
+          input.value = '19'
+        }
+        _window.quantityControll(_window)
+      })
+    }
+
     const buyButtonSelector =
       '#contents > div.contents > div.section.sec-slide > div > div.btn-cont > div > a.btn.primary'
     await page.waitForSelector(buyButtonSelector)
@@ -361,6 +373,11 @@ export const buyGiftCard = async ({
 
         if (payButton) {
           await payButton.click()
+
+          const infoModalButton = await page.$('#infoPop > div > div > div > div > button')
+          if (infoModalButton !== null) {
+            await infoModalButton.click()
+          }
 
           const alertButtonElement = await page.$('#alertPop > div > div > div > div > button')
           if (alertButtonElement !== null) {
